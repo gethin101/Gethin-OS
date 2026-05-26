@@ -28,7 +28,6 @@ body {
   color: white;
   text-shadow: 0 1px 3px black;
   cursor: pointer;
-  touch-action: manipulation;
 }
 
 .desktop-icon-img {
@@ -42,7 +41,7 @@ body {
   white-space: nowrap;
 }
 
-/* soundboard bigger icon */
+/* Bigger soundboard icon */
 .soundboard-icon-big {
   width: 96px;
   height: 96px;
@@ -70,11 +69,6 @@ body {
   align-items: center;
 }
 
-#taskbar-left {
-  justify-content: flex-start;
-  flex: 0 0 auto;
-}
-
 #taskbar-center {
   flex: 1;
   justify-content: center;
@@ -82,8 +76,6 @@ body {
 }
 
 #taskbar-right {
-  justify-content: flex-end;
-  flex: 0 0 auto;
   gap: 10px;
 }
 
@@ -102,10 +94,9 @@ body {
 
 .taskbar-start-img {
   height: 20px;
-  width: auto;
 }
 
-/* Centered app icons */
+/* Taskbar icons */
 .taskbar-icon {
   width: 40px;
   height: 40px;
@@ -123,7 +114,7 @@ body {
   height: 22px;
 }
 
-/* Taskbar app labels (for open windows) */
+/* Taskbar app labels */
 #taskbar-apps {
   display: flex;
   gap: 4px;
@@ -133,7 +124,6 @@ body {
 .taskbar-item {
   padding: 4px 8px;
   border-radius: 6px;
-  border: none;
   background: rgba(255,255,255,0.08);
   color: white;
   font-size: 0.75rem;
@@ -144,7 +134,7 @@ body {
   background: rgba(255,255,255,0.2);
 }
 
-/* Minimized area (bottom-right pills) */
+/* Minimized pills */
 #minimized-area {
   position: absolute;
   right: 10px;
@@ -172,7 +162,7 @@ body {
   height: 14px;
 }
 
-/* Tray */
+/* Tray icons */
 .tray-icon {
   font-size: 1.1rem;
 }
@@ -192,20 +182,10 @@ body {
   transform: rotate(-20deg);
 }
 
-.tray-btn,
-.tray-clock-btn {
+.tray-btn {
   border: none;
   background: transparent;
-  padding: 0;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-}
-
-.tray-clock {
-  text-align: right;
-  font-size: 0.75rem;
-  color: white;
 }
 
 /* Start menu */
@@ -240,7 +220,6 @@ body {
 .start-app {
   padding: 10px;
   background: rgba(255,255,255,0.1);
-  border: none;
   border-radius: 6px;
   color: white;
   cursor: pointer;
@@ -292,16 +271,13 @@ body {
   border-radius: 3px;
   border: none;
   cursor: pointer;
-  font-size: 0.7rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .window-btn.min { background: #4b5563; color: white; }
 .window-btn.max { background: #4b5563; color: white; }
 .window-btn.close { background: #ef4444; color: white; }
 
+/* Window content */
 .window-content {
   padding: 10px;
   color: white;
@@ -316,7 +292,6 @@ body {
   border-radius: 6px;
   color: white;
   padding: 8px;
-  font-family: monospace;
 }
 
 .notes-actions {
@@ -327,12 +302,10 @@ body {
 
 .notes-clear-btn {
   padding: 4px 10px;
-  border-radius: 6px;
-  border: none;
   background: rgba(239,68,68,0.9);
+  border-radius: 6px;
   color: white;
   cursor: pointer;
-  font-size: 0.8rem;
 }
 
 /* Terminal */
@@ -341,14 +314,11 @@ body {
   flex-direction: column;
   height: 100%;
   background: #0c0c0c;
-  border-radius: 4px;
-  overflow: hidden;
 }
 
 .terminal-titlebar {
   background: #202020;
-  color: #fff;
-  font-size: 0.8rem;
+  color: white;
   padding: 4px 8px;
 }
 
@@ -356,32 +326,25 @@ body {
   flex: 1;
   padding: 10px;
   font-family: Consolas, monospace;
-  font-size: 0.85rem;
-  color: #ffffff;
+  color: white;
   overflow-y: auto;
-  white-space: pre-wrap;
-  background: #0c0c0c;
 }
 
 .terminal-input-row {
   display: flex;
   padding: 8px;
-  background: #0c0c0c;
 }
 
 .terminal-prompt {
-  color: #ffffff;
+  color: white;
   margin-right: 6px;
-  font-family: Consolas, monospace;
 }
 
 .terminal-input {
   flex: 1;
   background: transparent;
   border: none;
-  outline: none;
-  color: #ffffff;
-  font-family: Consolas, monospace;
+  color: white;
 }
 
 /* Popups */
@@ -398,21 +361,11 @@ body {
   z-index: 80;
 }
 
-.popup-section {
-  margin-bottom: 10px;
-}
-
 .popup-title {
   font-size: 0.85rem;
   margin-bottom: 6px;
 }
 
-.wifi-network {
-  font-size: 0.8rem;
-  padding: 4px 0;
-}
-
-/* Volume popup */
 .volume-row {
   display: flex;
   align-items: center;
@@ -423,10 +376,8 @@ body {
   flex: 1;
 }
 
-/* Battery popup */
 .battery-status-main {
   font-size: 1.1rem;
-  margin-bottom: 4px;
 }
 
 .battery-status-sub {
@@ -434,12 +385,11 @@ body {
   opacity: 0.8;
 }
 
-/* Calendar popup */
+/* Calendar */
 .calendar-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 4px;
-  font-size: 0.7rem;
 }
 
 .calendar-day {
@@ -449,7 +399,6 @@ body {
 }
 
 .calendar-day.header {
-  font-weight: 600;
   opacity: 0.7;
 }
 
@@ -457,88 +406,17 @@ body {
   background: #2563eb;
 }
 
-/* File Explorer */
-.explorer-root {
-  display: flex;
-  height: 100%;
+/* Soundboard */
+.soundboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 
-.explorer-sidebar {
-  width: 140px;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  padding: 8px;
-  font-size: 0.8rem;
-}
-
-.explorer-sidebar h4 {
-  font-size: 0.8rem;
-  margin-bottom: 6px;
-}
-
-.explorer-nav-item {
-  padding: 4px 4px;
-  border-radius: 4px;
+.soundboard-btn {
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(59,130,246,0.25);
+  color: white;
   cursor: pointer;
 }
-
-.explorer-nav-item.active {
-  background: rgba(255,255,255,0.15);
-}
-
-.explorer-nav-item:hover {
-  background: rgba(255,255,255,0.08);
-}
-
-.explorer-main {
-  flex: 1;
-  padding: 8px;
-  display: flex;
-  flex-direction: column;
-}
-
-.explorer-header {
-  font-size: 0.85rem;
-  margin-bottom: 6px;
-}
-
-.explorer-files {
-  flex: 1;
-  overflow-y: auto;
-  font-size: 0.8rem;
-}
-
-.explorer-file-row {
-  display: flex;
-  align-items: center;
-  padding: 4px 6px;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.explorer-file-row:hover {
-  background: rgba(255,255,255,0.08);
-}
-
-.explorer-file-name {
-  flex: 1;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.explorer-file-type {
-  width: 60px;
-  text-align: right;
-  opacity: 0.7;
-}
-
-/* Viewer window */
-.viewer-content {
-  font-size: 0.85rem;
-}
-
-.viewer-textarea {
-  width: 100%;
-  height: 200px;
-  background: #111;
-  border: 1px solid #
