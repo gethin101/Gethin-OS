@@ -1,73 +1,65 @@
 * {
-  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  box-sizing: border-box;
+  font-family: Segoe UI, sans-serif;
 }
 
 body {
-  background: #111;
-  color: #fff;
+  background: #0f172a;
   height: 100vh;
   overflow: hidden;
+  color: white;
 }
 
-/* Boot screen */
-
+/* Boot Screen */
 #boot-screen {
   position: fixed;
   inset: 0;
-  background: radial-gradient(circle at top, #333, #000);
+  background: #000;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 24px;
+  align-items: center;
+  gap: 20px;
 }
 
 .boot-logo {
-  font-size: 2.5rem;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
+  font-size: 2.4rem;
+  letter-spacing: 0.1em;
 }
 
 .boot-bar {
-  width: 220px;
+  width: 200px;
   height: 6px;
-  border-radius: 999px;
   background: #222;
+  border-radius: 999px;
   overflow: hidden;
 }
 
 .boot-bar-fill {
   width: 0;
   height: 100%;
-  background: linear-gradient(90deg, #4ade80, #22c55e);
-  animation: boot-fill 2.4s forwards;
+  background: #22c55e;
+  animation: boot 2.4s forwards;
 }
 
-@keyframes boot-fill {
-  to {
-    width: 100%;
-  }
+@keyframes boot {
+  to { width: 100%; }
 }
 
-/* Lock screen */
-
-.hidden {
-  display: none;
-}
+/* Lock Screen */
+.hidden { display: none; }
 
 #lock-screen {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #020617, #0f172a);
+  background: linear-gradient(135deg, #1e293b, #0f172a);
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
-  gap: 16px;
-  color: #e5e7eb;
+  align-items: center;
+  gap: 12px;
 }
 
 .lock-time {
@@ -75,224 +67,170 @@ body {
   font-weight: 600;
 }
 
-.lock-user {
-  font-size: 1.1rem;
-  opacity: 0.8;
-}
-
 #unlock-btn {
-  margin-top: 12px;
-  padding: 10px 18px;
-  border-radius: 999px;
+  padding: 8px 18px;
+  border-radius: 6px;
   border: none;
   background: #22c55e;
-  color: #020617;
-  font-weight: 600;
+  color: #000;
   cursor: pointer;
 }
 
 /* Desktop */
-
-#os {
-  position: fixed;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-}
-
 #desktop {
   flex: 1;
-  position: relative;
-  background: radial-gradient(circle at top left, #1e293b, #020617);
-  padding: 16px;
+  background: url("https://wallpapercave.com/wp/wp4923981.jpg");
+  background-size: cover;
+  padding: 20px;
   display: flex;
   flex-wrap: wrap;
-  align-content: flex-start;
-  gap: 16px;
+  gap: 20px;
 }
 
 .desktop-icon {
   width: 80px;
   text-align: center;
-  color: #e5e7eb;
   cursor: pointer;
-}
-
-.desktop-icon span {
-  font-size: 0.75rem;
-  margin-top: 4px;
-  display: block;
 }
 
 .icon-square {
   width: 48px;
   height: 48px;
+  border-radius: 8px;
   margin: 0 auto;
-  border-radius: 12px;
 }
 
-.icon-about {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-}
-
-.icon-notes {
-  background: linear-gradient(135deg, #facc15, #eab308);
-}
+.icon-about { background: #22c55e; }
+.icon-notes { background: #facc15; }
+.icon-terminal { background: #0ea5e9; }
 
 /* Taskbar */
-
 #taskbar {
-  height: 36px;
-  background: rgba(15, 23, 42, 0.95);
-  border-top: 1px solid rgba(148, 163, 184, 0.3);
+  height: 42px;
+  background: rgba(30, 41, 59, 0.75);
+  backdrop-filter: blur(12px);
   display: flex;
   align-items: center;
-  padding: 0 8px;
-  gap: 8px;
-  color: #e5e7eb;
+  padding: 0 10px;
+  gap: 10px;
 }
 
 #start-button {
-  padding: 4px 10px;
-  border-radius: 999px;
-  background: rgba(30, 64, 175, 0.9);
+  padding: 6px 12px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 6px;
   cursor: pointer;
-  font-size: 0.85rem;
 }
 
 #taskbar-apps {
   flex: 1;
   display: flex;
-  gap: 4px;
+  gap: 6px;
 }
 
 .taskbar-item {
-  padding: 3px 8px;
+  padding: 4px 10px;
+  background: rgba(255,255,255,0.1);
   border-radius: 6px;
-  background: rgba(15, 23, 42, 0.8);
-  border: 1px solid transparent;
-  font-size: 0.8rem;
   cursor: pointer;
 }
 
 .taskbar-item.active {
-  border-color: #22c55e;
+  background: rgba(34,197,94,0.4);
 }
 
 #taskbar-clock {
-  font-size: 0.8rem;
   opacity: 0.8;
 }
 
-/* Start menu */
-
+/* Start Menu */
 #start-menu {
   position: fixed;
-  left: 8px;
-  bottom: 40px;
-  width: 220px;
-  background: rgba(15, 23, 42, 0.98);
-  border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.4);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.6);
+  left: 10px;
+  bottom: 50px;
+  width: 260px;
+  background: rgba(30,41,59,0.85);
+  backdrop-filter: blur(18px);
+  border-radius: 12px;
   overflow: hidden;
 }
 
 .start-header {
   padding: 10px;
   font-weight: 600;
-  border-bottom: 1px solid rgba(51, 65, 85, 1);
+  background: rgba(255,255,255,0.05);
 }
 
 .start-apps {
-  padding: 8px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .start-app {
-  padding: 6px 8px;
-  border-radius: 6px;
+  padding: 6px;
+  background: rgba(255,255,255,0.05);
   border: none;
-  background: transparent;
-  color: #e5e7eb;
+  border-radius: 6px;
+  color: white;
   text-align: left;
-  font-size: 0.85rem;
   cursor: pointer;
 }
 
-.start-app:hover {
-  background: rgba(30, 64, 175, 0.7);
-}
-
 /* Windows */
-
 .window {
   position: absolute;
-  width: 360px;
-  min-height: 180px;
-  background: rgba(15, 23, 42, 0.98);
-  border-radius: 10px;
-  border: 1px solid rgba(148, 163, 184, 0.5);
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
-  display: flex;
-  flex-direction: column;
+  width: 380px;
+  background: rgba(15,23,42,0.85);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
   overflow: hidden;
 }
 
 .window-header {
-  height: 30px;
+  height: 32px;
+  background: rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
-  padding: 0 8px;
-  gap: 6px;
-  background: linear-gradient(90deg, #0f172a, #1e293b);
+  padding: 0 10px;
   cursor: grab;
 }
 
 .window-header-title {
-  font-size: 0.85rem;
   flex: 1;
 }
 
 .window-controls {
   display: flex;
-  gap: 4px;
+  gap: 6px;
 }
 
 .window-btn {
   width: 14px;
   height: 14px;
-  border-radius: 999px;
+  border-radius: 50%;
   border: none;
   cursor: pointer;
 }
 
-.window-btn.close {
-  background: #ef4444;
-}
-
-.window-btn.min {
-  background: #facc15;
-}
+.window-btn.min { background: #facc15; }
+.window-btn.close { background: #ef4444; }
 
 .window-content {
-  padding: 10px;
-  font-size: 0.85rem;
-  color: #e5e7eb;
+  padding: 12px;
 }
 
-/* Notes app */
-
+/* Notes */
 .notes-textarea {
   width: 100%;
-  height: 160px;
-  background: #020617;
+  height: 200px;
+  background: #0f172a;
+  border: 1px solid #334155;
   border-radius: 6px;
-  border: 1px solid rgba(51, 65, 85, 1);
-  color: #e5e7eb;
+  color: white;
   padding: 8px;
   resize: vertical;
-  font-size: 0.85rem;
+  font-family: monospace;
 }
