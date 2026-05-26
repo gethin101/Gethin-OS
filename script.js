@@ -14,12 +14,10 @@ const trayTime = document.getElementById("tray-time");
 const trayDate = document.getElementById("tray-date");
 const popupDateTitle = document.getElementById("popup-date-title");
 const calendarGrid = document.getElementById("calendar-grid");
-const focusDurationEl = document.getElementById("focus-duration");
 
 let z = 10;
 const openWindows = {};
 let muted = false;
-let focusMinutes = 30;
 
 /* Clock + date */
 function updateClock() {
@@ -123,21 +121,78 @@ datetimeButton.onclick = (e) => {
   }
 };
 
-/* Focus controls */
-document.querySelector(".focus-minus").onclick = (e) => {
-  e.stopPropagation();
-  focusMinutes = Math.max(5, focusMinutes - 5);
-  focusDurationEl.textContent = `${focusMinutes} mins`;
-};
-
-document.querySelector(".focus-plus").onclick = (e) => {
-  e.stopPropagation();
-  focusMinutes = Math.min(180, focusMinutes + 5);
-  focusDurationEl.textContent = `${focusMinutes} mins`;
-};
-
 /* Apps */
+const explorerFiles = [
+  { name: "notes.txt", type: "text", content: "These are your notes.\nYou can edit them in the Notes app." },
+  { name: "readme.txt", type: "text", content: "Welcome to Gethin OS.\nThis is a fake file explorer." },
+  { name: "wallpaper.jpg", type: "image", src: "assets/wallpaper.jpg" },
+  { name: "notes.png", type: "image", src: "assets/notes.png" },
+  { name: "terminal.png", type: "image", src: "assets/terminal.png" },
+  { name: "explorer.png", type: "image", src: "assets/explorer.png" },
+  { name: "start.png", type: "image", src: "assets/start.png" },
+  { name: "template1.txt", type: "text", content: "Template text file 1." },
+  { name: "template2.txt", type: "text", content: "Template text file 2." },
+  { name: "photo1.jpg", type: "image", src: "assets/wallpaper.jpg" },
+];
+
 const apps = {
+  explorer: {
+    title: "File Explorer",
+    createContent() {
+      const root = document.createElement("div");
+      root.className = "explorer-root";
+
+      const sidebar = document.createElement("div");
+      sidebar.className = "explorer-sidebar";
+      sidebar.innerHTML = `
+        <h4>Home</h4>
+        <div class="explorer-nav-item">Desktop</div>
+        <div class="explorer-nav-item">Downloads</div>
+        <div class="explorer-nav-item">Documents</div>
+        <div class="explorer-nav-item">Pictures</div>
+        <div class="explorer-nav-item">Music</div>
+      `;
+
+      const main = document.createElement("div");
+      main.className = "explorer-main";
+
+      const header = document.createElement("div");
+      header.className = "explorer-header";
+      header.textContent = "Recent files";
+
+      const filesContainer = document.createElement("div");
+      filesContainer.className = "explorer-files";
+
+      explorerFiles.forEach(file => {
+        const row = document.createElement("div");
+        row.className = "explorer-file-row";
+
+        const name = document.createElement("div");
+        name.className = "explorer-file-name";
+        name.textContent = file.name;
+
+        const type = document.createElement("div");
+        type.className = "explorer-file-type";
+        type.textContent = file.type === "text" ? "Text" : "Image";
+
+        row.appendChild(name);
+        row.appendChild(type);
+
+        row.addEventListener("click", () => openFileViewer(file));
+
+        filesContainer.appendChild(row);
+      });
+
+      main.appendChild(header);
+      main.appendChild(filesContainer);
+
+      root.appendChild(sidebar);
+      root.appendChild(main);
+
+      return root;
+    },
+  },
+
   notes: {
     title: "Notes",
     createContent() {
@@ -150,10 +205,14 @@ const apps = {
   },
 
   terminal: {
-    title: "Terminal",
+    title: "Windows PowerShell",
     createContent() {
       const root = document.createElement("div");
       root.className = "terminal-root";
+
+      const titlebar = document.createElement("div");
+      titlebar.className = "terminal-titlebar";
+      titlebar.textContent = "Windows PowerShell";
 
       const output = document.createElement("div");
       output.className = "terminal-output";
@@ -163,7 +222,7 @@ const apps = {
 
       const prompt = document.createElement("span");
       prompt.className = "terminal-prompt";
-      prompt.textContent = "C:\\Gethin>";
+      prompt.textContent = "C:\\Users\\user>";
 
       const input = document.createElement("input");
       input.className = "terminal-input";
@@ -171,6 +230,7 @@ const apps = {
       row.appendChild(prompt);
       row.appendChild(input);
 
+      root.appendChild(titlebar);
       root.appendChild(output);
       root.appendChild(row);
 
@@ -207,13 +267,83 @@ const apps = {
         }
       });
 
-      print("Gethin OS Terminal");
+      print("Windows PowerShell");
+      print("(Fake) Gethin OS shell");
       print("Type 'help'");
+
+      setTimeout(() => input.focus(), 50);
 
       return root;
     },
   },
 };
+
+/* File viewer (separate window) */
+function openFileViewer(file) {
+  const win = document.createElement("div");
+  win.className = "window";
+
+  const header = document.createElement("div");
+  header.className = "window-header";
+
+  const title = document.createElement("div");
+  title.className = "window-header-title";
+  title.textContent = file.name;
+
+  const controls = document.createElement("div");
+  controls.className = "window-controls";
+
+  const close = document.createElement("button");
+  close.className = "window-btn close";
+
+  controls.appendChild(close);
+  header.appendChild(title);
+  header.appendChild(controls);
+
+  const content = document.createElement("div");
+  content.className = "window-content viewer-content";
+
+  if (file.type === "text") {
+    const pre = document.createElement("div");
+    pre.className = "viewer-text";
+    pre.textContent = file.content || "";
+    content.appendChild(pre);
+  } else if (file.type === "image") {
+    const img = document.createElement("img");
+    img.className = "viewer-image";
+    img.src = file.src;
+    content.appendChild(img);
+  }
+
+  win.appendChild(header);
+  win.appendChild(content);
+  windowLayer.appendChild(win);
+
+  win.style.left = "120px";
+  win.style.top = "120px";
+  win.style.zIndex = ++z;
+
+  function focus() {
+    win.style.zIndex = ++z;
+  }
+
+  win.addEventListener("mousedown", focus);
+
+  let drag = false, dx = 0, dy = 0;
+  header.addEventListener("mousedown", (e) => {
+    drag = true;
+    dx = e.clientX - win.offsetLeft;
+    dy = e.clientY - win.offsetTop;
+  });
+  document.addEventListener("mousemove", (e) => {
+    if (!drag) return;
+    win.style.left = e.clientX - dx + "px";
+    win.style.top = e.clientY - dy + "px";
+  });
+  document.addEventListener("mouseup", () => drag = false);
+
+  close.onclick = () => win.remove();
+}
 
 /* Window system */
 function createWindow(appId, opts = {}) {
@@ -280,7 +410,6 @@ function createWindow(appId, opts = {}) {
   win.addEventListener("mousedown", focus);
   taskItem.addEventListener("click", focus);
 
-  /* Dragging */
   let drag = false, dx = 0, dy = 0;
 
   header.addEventListener("mousedown", (e) => {
@@ -297,10 +426,8 @@ function createWindow(appId, opts = {}) {
 
   document.addEventListener("mouseup", () => (drag = false));
 
-  /* Minimize */
   min.onclick = () => win.classList.add("hidden");
 
-  /* Close */
   close.onclick = () => {
     win.remove();
     taskItem.remove();
