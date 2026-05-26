@@ -13,6 +13,11 @@ const volumeIconPopup = document.getElementById("volume-icon-popup");
 const wifiButton = document.getElementById("wifi-button");
 const wifiPopup = document.getElementById("wifi-popup");
 
+const batteryButton = document.getElementById("battery-button");
+const batteryPopup = document.getElementById("battery-popup");
+const batteryStatusMain = document.getElementById("battery-status-main");
+const batteryStatusSub = document.getElementById("battery-status-sub");
+
 const datetimeButton = document.getElementById("datetime-button");
 const datetimePopup = document.getElementById("datetime-popup");
 const trayTime = document.getElementById("tray-time");
@@ -77,6 +82,7 @@ startButton.onclick = (e) => {
   startMenu.classList.toggle("hidden");
   volumePopup.classList.add("hidden");
   wifiPopup.classList.add("hidden");
+  batteryPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
 };
 
@@ -84,11 +90,12 @@ document.addEventListener("click", () => {
   startMenu.classList.add("hidden");
   volumePopup.classList.add("hidden");
   wifiPopup.classList.add("hidden");
+  batteryPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
 });
 
 /* Stop clicks inside popups from closing everything */
-[startMenu, volumePopup, wifiPopup, datetimePopup].forEach(el => {
+[startMenu, volumePopup, wifiPopup, batteryPopup, datetimePopup].forEach(el => {
   el.addEventListener("click", (e) => e.stopPropagation());
 });
 
@@ -108,6 +115,7 @@ volumeButton.onclick = (e) => {
   const isHidden = volumePopup.classList.contains("hidden");
   volumePopup.classList.add("hidden");
   wifiPopup.classList.add("hidden");
+  batteryPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
   if (isHidden) volumePopup.classList.remove("hidden");
 };
@@ -139,8 +147,31 @@ wifiButton.onclick = (e) => {
   const isHidden = wifiPopup.classList.contains("hidden");
   wifiPopup.classList.add("hidden");
   volumePopup.classList.add("hidden");
+  batteryPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
   if (isHidden) wifiPopup.classList.remove("hidden");
+};
+
+/* Battery popup */
+function updateBatteryPopup() {
+  const percent = 76;
+  const hours = 3;
+  const mins = 42;
+  batteryStatusMain.textContent = `${percent}% remaining`;
+  batteryStatusSub.textContent = `About ${hours} hours ${mins} minutes remaining`;
+}
+
+batteryButton.onclick = (e) => {
+  e.stopPropagation();
+  const isHidden = batteryPopup.classList.contains("hidden");
+  batteryPopup.classList.add("hidden");
+  volumePopup.classList.add("hidden");
+  wifiPopup.classList.add("hidden");
+  datetimePopup.classList.add("hidden");
+  if (isHidden) {
+    updateBatteryPopup();
+    batteryPopup.classList.remove("hidden");
+  }
 };
 
 /* Date/time popup */
@@ -150,6 +181,7 @@ datetimeButton.onclick = (e) => {
   datetimePopup.classList.add("hidden");
   volumePopup.classList.add("hidden");
   wifiPopup.classList.add("hidden");
+  batteryPopup.classList.add("hidden");
   if (isHidden) {
     renderCalendar();
     datetimePopup.classList.remove("hidden");
@@ -384,23 +416,29 @@ const apps = {
       const grid = document.createElement("div");
       grid.className = "soundboard-grid";
 
-      const labels = [
-        "Boop",
-        "Click",
-        "Error",
-        "Success",
-        "Ping",
-        "Pop",
-        "Whoosh",
-        "Alert",
-        "Glitch",
+      const sounds = [
+        { label: "Apple Pay", file: "assets/audio/apple-pay.mp3" },
+        { label: "USB Disconnect", file: "assets/audio/usb-disconnect.mp3" },
+        { label: "Faaah", file: "assets/audio/faaah.mp3" },
+        { label: "Oh Hell Nah", file: "assets/audio/hell-nah.mp3" },
+        { label: "Windows Shutdown", file: "assets/audio/windows_shutdown.mp3" },
+        { label: "Punch", file: "assets/audio/punch.mp3" },
+        { label: "Vine Boom", file: "assets/audio/boom.mp3" },
+        { label: "Buzzer", file: "assets/audio/buzzer.mp3" },
+        { label: "Windows XP (Bass Boost)", file: "assets/audio/windows-bass.mp3" },
       ];
 
-      labels.forEach(label => {
+      sounds.forEach(s => {
         const btn = document.createElement("button");
         btn.className = "soundboard-btn";
-        btn.textContent = label;
-        // later you can hook: new Audio("assets/audio/whatever.mp3").play()
+        btn.textContent = s.label;
+        btn.dataset.audio = s.file;
+
+        btn.onclick = () => {
+          const audio = new Audio(s.file);
+          audio.play();
+        };
+
         grid.appendChild(btn);
       });
 
@@ -526,14 +564,14 @@ function openFileViewer(file) {
   document.addEventListener("mouseup", () => drag = false);
 
   min.onclick = () => {
-    win.classList.add("hidden");
+    win.style.display = "none";
     if (!pill) {
       pill = createMinimizedPill(
         "viewer-" + file.name,
         file.name,
         file.type === "image" ? file.src : null,
         () => {
-          win.classList.remove("hidden");
+          win.style.display = "";
           focusWin();
           pill = null;
         }
@@ -663,7 +701,7 @@ function createWindow(appId, opts = {}) {
   document.addEventListener("mouseup", () => (drag = false));
 
   min.onclick = () => {
-    win.classList.add("hidden");
+    win.style.display = "none";
     const entry = openWindows[appId];
     if (!entry.pill) {
       entry.pill = createMinimizedPill(
@@ -671,7 +709,7 @@ function createWindow(appId, opts = {}) {
         app.title,
         app.icon,
         () => {
-          win.classList.remove("hidden");
+          win.style.display = "";
           focusThis();
           entry.pill = null;
         }
@@ -738,7 +776,7 @@ document.querySelectorAll(".start-app").forEach((btn) => {
 
 /* Pinned apps (single click) */
 document.querySelectorAll(".pinned").forEach((btn) => {
-  btn.onclick = () => createWindow(btn.dataset.app);
+  btn.onclick = () => createWindow(btn.dataset.app));
 });
 
 /* Auto-open terminal on right */
