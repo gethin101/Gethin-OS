@@ -24,6 +24,11 @@
       <img src="assets/terminal.png" class="desktop-icon-img" />
       <span>Terminal</span>
     </div>
+
+    <div class="desktop-icon" data-app="soundboard">
+      <img src="assets/soundboard.png" class="desktop-icon-img" />
+      <span>Soundboard</span>
+    </div>
   </div>
 
   <!-- Taskbar -->
@@ -43,6 +48,9 @@
       </button>
       <button class="taskbar-icon pinned" data-app="terminal">
         <img src="assets/terminal.png" class="taskbar-icon-img" />
+      </button>
+      <button class="taskbar-icon pinned" data-app="soundboard">
+        <img src="assets/soundboard.png" class="taskbar-icon-img" />
       </button>
       <div id="taskbar-apps"></div>
     </div>
@@ -64,6 +72,9 @@
     </div>
   </div>
 
+  <!-- Minimized area -->
+  <div id="minimized-area"></div>
+
   <!-- Start Menu -->
   <div id="start-menu" class="hidden">
     <div class="start-header">Gethin OS</div>
@@ -71,6 +82,7 @@
       <button class="start-app" data-app="explorer">File Explorer</button>
       <button class="start-app" data-app="notes">Notes</button>
       <button class="start-app" data-app="terminal">Terminal</button>
+      <button class="start-app" data-app="soundboard">Soundboard</button>
     </div>
   </div>
 
