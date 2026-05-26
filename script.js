@@ -1,108 +1,70 @@
-// --- Boot + lock screen ---
+// Boot + Lock Screen
+const boot = document.getElementById("boot-screen");
+const lock = document.getElementById("lock-screen");
+const os = document.getElementById("os");
 
-const bootScreen = document.getElementById("boot-screen");
-const lockScreen = document.getElementById("lock-screen");
-const osRoot = document.getElementById("os");
-const lockTime = document.getElementById("lock-time");
-const unlockBtn = document.getElementById("unlock-btn");
+setTimeout(() => {
+  boot.classList.add("hidden");
+  lock.classList.remove("hidden");
+}, 2600);
 
+document.getElementById("unlock-btn").onclick = () => {
+  lock.classList.add("hidden");
+  os.classList.remove("hidden");
+};
+
+// Lock screen clock
 function updateLockTime() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, "0");
-  const m = String(now.getMinutes()).padStart(2, "0");
-  lockTime.textContent = `${h}:${m}`;
+  const t = new Date();
+  document.getElementById("lock-time").textContent =
+    t.getHours().toString().padStart(2, "0") + ":" +
+    t.getMinutes().toString().padStart(2, "0");
 }
-
 setInterval(updateLockTime, 1000);
 updateLockTime();
 
-setTimeout(() => {
-  bootScreen.classList.add("hidden");
-  lockScreen.classList.remove("hidden");
-}, 2600);
-
-unlockBtn.addEventListener("click", () => {
-  lockScreen.classList.add("hidden");
-  osRoot.classList.remove("hidden");
-});
-
-// --- Clock in taskbar ---
-
-const taskbarClock = document.getElementById("taskbar-clock");
-
-function updateTaskbarClock() {
-  const now = new Date();
-  const h = String(now.getHours()).padStart(2, "0");
-  const m = String(now.getMinutes()).padStart(2, "0");
-  taskbarClock.textContent = `${h}:${m}`;
+// Taskbar clock
+function updateClock() {
+  const t = new Date();
+  document.getElementById("taskbar-clock").textContent =
+    t.getHours().toString().padStart(2, "0") + ":" +
+    t.getMinutes().toString().padStart(2, "0");
 }
+setInterval(updateClock, 1000);
+updateClock();
 
-setInterval(updateTaskbarClock, 1000);
-updateTaskbarClock();
-
-// --- Start menu ---
-
-const startButton = document.getElementById("start-button");
+// Start Menu
+const startBtn = document.getElementById("start-button");
 const startMenu = document.getElementById("start-menu");
 
-startButton.addEventListener("click", () => {
-  startMenu.classList.toggle("hidden");
-});
+startBtn.onclick = () => startMenu.classList.toggle("hidden");
 
 document.addEventListener("click", (e) => {
-  if (!startMenu.contains(e.target) && e.target !== startButton) {
+  if (!startMenu.contains(e.target) && e.target !== startBtn) {
     startMenu.classList.add("hidden");
   }
 });
 
-// --- Window + app system ---
-
+// Window System
 const windowLayer = document.getElementById("window-layer");
 const taskbarApps = document.getElementById("taskbar-apps");
-
-let zCounter = 10;
-const openWindows = {}; // appId -> { windowEl, taskbarEl }
-
-const apps = {
-  about: {
-    title: "About Gethin OS",
-    createContent() {
-      const div = document.createElement("div");
-      div.innerHTML = `
-        <p><strong>Gethin OS</strong> — a web-based operating system experiment.</p>
-        <p style="margin-top:8px;">Built in HTML, CSS and JavaScript.</p>
-        <p style="margin-top:8px; opacity:0.7;">v0.1 • ${new Date().getFullYear()}</p>
-      `;
-      return div;
-    },
-  },
-  notes: {
-    title: "Notes",
-    createContent() {
-      const wrapper = document.createElement("div");
-      const textarea = document.createElement("textarea");
-      textarea.className = "notes-textarea";
-      textarea.placeholder = "Write your notes here...";
-      textarea.value = localStorage.getItem("gethin_os_notes") || "";
-      textarea.addEventListener("input", () => {
-        localStorage.setItem("gethin_os_notes", textarea.value);
-      });
-      wrapper.appendChild(textarea);
-      return wrapper;
-    },
-  },
-};
+let z = 10;
+const openWindows = {};
 
 function createWindow(appId) {
   const app = apps[appId];
   if (!app) return;
 
-  // Window element
+  if (openWindows[appId]) {
+    focusWindow(appId);
+    return;
+  }
+
   const win = document.createElement("div");
   win.className = "window";
-  win.style.left = 80 + Math.random() * 120 + "px";
-  win.style.top = 80 + Math.random() * 80 + "px";
-  win.style.zIndex = ++zCounter;
+  win.style.left = 100 + Math.random() * 100 + "px";
+  win.style.top = 100 + Math.random() * 100 + "px";
+  win.style.zIndex = ++z;
 
   const header = document.createElement("div");
   header.className = "window-header";
@@ -114,14 +76,14 @@ function createWindow(appId) {
   const controls = document.createElement("div");
   controls.className = "window-controls";
 
-  const btnMin = document.createElement("button");
-  btnMin.className = "window-btn min";
+  const min = document.createElement("button");
+  min.className = "window-btn min";
 
-  const btnClose = document.createElement("button");
-  btnClose.className = "window-btn close";
+  const close = document.createElement("button");
+  close.className = "window-btn close";
 
-  controls.appendChild(btnMin);
-  controls.appendChild(btnClose);
+  controls.appendChild(min);
+  controls.appendChild(close);
 
   header.appendChild(title);
   header.appendChild(controls);
@@ -134,46 +96,36 @@ function createWindow(appId) {
   win.appendChild(content);
   windowLayer.appendChild(win);
 
-  // Taskbar item
   const taskItem = document.createElement("button");
   taskItem.className = "taskbar-item active";
   taskItem.textContent = app.title;
   taskbarApps.appendChild(taskItem);
 
-  openWindows[appId] = { windowEl: win, taskbarEl: taskItem };
+  openWindows[appId] = { win, taskItem };
 
-  // Focus on click
   function focusWindow() {
-    win.style.zIndex = ++zCounter;
-    Object.values(openWindows).forEach((w) => w.taskbarEl.classList.remove("active"));
+    win.style.zIndex = ++z;
+    document.querySelectorAll(".taskbar-item").forEach(i => i.classList.remove("active"));
     taskItem.classList.add("active");
   }
 
   win.addEventListener("mousedown", focusWindow);
-  taskItem.addEventListener("click", () => {
-    if (win.classList.contains("hidden")) {
-      win.classList.remove("hidden");
-    }
-    focusWindow();
-  });
+  taskItem.addEventListener("click", focusWindow);
 
   // Dragging
-  let dragOffsetX = 0;
-  let dragOffsetY = 0;
-  let dragging = false;
+  let dragging = false, dx = 0, dy = 0;
 
   header.addEventListener("mousedown", (e) => {
     dragging = true;
-    dragOffsetX = e.clientX - win.offsetLeft;
-    dragOffsetY = e.clientY - win.offsetTop;
+    dx = e.clientX - win.offsetLeft;
+    dy = e.clientY - win.offsetTop;
     document.body.style.userSelect = "none";
-    focusWindow();
   });
 
   document.addEventListener("mousemove", (e) => {
     if (!dragging) return;
-    win.style.left = e.clientX - dragOffsetX + "px";
-    win.style.top = e.clientY - dragOffsetY + "px";
+    win.style.left = e.clientX - dx + "px";
+    win.style.top = e.clientY - dy + "px";
   });
 
   document.addEventListener("mouseup", () => {
@@ -182,34 +134,120 @@ function createWindow(appId) {
   });
 
   // Minimize
-  btnMin.addEventListener("click", () => {
-    win.classList.add("hidden");
-    taskItem.classList.remove("active");
-  });
+  min.onclick = () => win.classList.add("hidden");
 
   // Close
-  btnClose.addEventListener("click", () => {
+  close.onclick = () => {
     win.remove();
     taskItem.remove();
     delete openWindows[appId];
-  });
+  };
 
   focusWindow();
 }
 
+// Apps
+const apps = {
+  about: {
+    title: "About Gethin OS",
+    createContent() {
+      const d = document.createElement("div");
+      d.innerHTML = `
+        <h3>Gethin OS</h3>
+        <p>A web‑based OS built by Gethin.</p>
+        <p>Version 1.0</p>
+      `;
+      return d;
+    }
+  },
+
+  notes: {
+    title: "Notes",
+    createContent() {
+      const t = document.createElement("textarea");
+      t.className = "notes-textarea";
+      t.value = localStorage.getItem("notes") || "";
+      t.oninput = () => localStorage.setItem("notes", t.value);
+      return t;
+    }
+  },
+
+  terminal: {
+    title: "Terminal",
+    createContent() {
+      const wrap = document.createElement("div");
+      wrap.style.display = "flex";
+      wrap.style.flexDirection = "column";
+      wrap.style.height = "100%";
+
+      const out = document.createElement("div");
+      out.style.flex = "1";
+      out.style.overflowY = "auto";
+      out.style.fontFamily = "monospace";
+      out.style.whiteSpace = "pre-wrap";
+
+      const input = document.createElement("input");
+      input.style.padding = "6px";
+      input.style.background = "#0f172a";
+      input.style.border = "1px solid #334155";
+      input.style.color = "white";
+      input.style.borderRadius = "6px";
+      input.placeholder = "Type a command...";
+
+      function print(t) {
+        out.textContent += t + "\n";
+        out.scrollTop = out.scrollHeight;
+      }
+
+      const commands = {
+        help() {
+          print("Commands:\nhelp\napps\nopen <app>\nclear\nabout");
+        },
+        apps() {
+          print("Apps:\n" + Object.keys(apps).join("\n"));
+        },
+        clear() {
+          out.textContent = "";
+        },
+        about() {
+          print("Gethin OS Terminal v1.0");
+        },
+        open(app) {
+          if (!apps[app]) return print("Unknown app: " + app);
+          createWindow(app);
+          print("Opened " + app);
+        }
+      };
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const text = input.value.trim();
+          input.value = "";
+          print("> " + text);
+
+          const [cmd, arg] = text.split(" ");
+
+          if (commands[cmd]) commands[cmd](arg);
+          else print("Unknown command. Type 'help'");
+        }
+      });
+
+      wrap.appendChild(out);
+      wrap.appendChild(input);
+      return wrap;
+    }
+  }
+};
+
 // Desktop icons
-document.querySelectorAll(".desktop-icon").forEach((icon) => {
-  icon.addEventListener("dblclick", () => {
-    const appId = icon.dataset.app;
-    createWindow(appId);
-  });
+document.querySelectorAll(".desktop-icon").forEach(icon => {
+  icon.addEventListener("dblclick", () => createWindow(icon.dataset.app));
 });
 
 // Start menu apps
-document.querySelectorAll(".start-app").forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const appId = btn.dataset.app;
-    createWindow(appId);
+document.querySelectorAll(".start-app").forEach(btn => {
+  btn.onclick = () => {
+    createWindow(btn.dataset.app);
     startMenu.classList.add("hidden");
-  });
+  };
 });
