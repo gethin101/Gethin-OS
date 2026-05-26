@@ -7,50 +7,61 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Boot screen -->
+
+  <!-- Boot Screen -->
   <div id="boot-screen">
     <div class="boot-logo">Gethin OS</div>
-    <div class="boot-bar">
-      <div class="boot-bar-fill"></div>
-    </div>
+    <div class="boot-bar"><div class="boot-bar-fill"></div></div>
   </div>
 
-  <!-- Lock screen -->
+  <!-- Lock Screen -->
   <div id="lock-screen" class="hidden">
-    <div class="lock-time" id="lock-time"></div>
+    <div id="lock-time" class="lock-time"></div>
     <div class="lock-user">gethin</div>
-    <button id="unlock-btn">Press to enter</button>
+    <button id="unlock-btn">Enter</button>
   </div>
 
-  <!-- Main OS -->
+  <!-- OS -->
   <div id="os" class="hidden">
+
+    <!-- Desktop -->
     <div id="desktop">
       <div class="desktop-icon" data-app="about">
         <div class="icon-square icon-about"></div>
-        <span>About Gethin OS</span>
+        <span>About</span>
       </div>
+
       <div class="desktop-icon" data-app="notes">
         <div class="icon-square icon-notes"></div>
         <span>Notes</span>
       </div>
+
+      <div class="desktop-icon" data-app="terminal">
+        <div class="icon-square icon-terminal"></div>
+        <span>Terminal</span>
+      </div>
     </div>
 
+    <!-- Taskbar -->
     <div id="taskbar">
-      <div id="start-button">⊞ Gethin</div>
+      <div id="start-button">⊞</div>
       <div id="taskbar-apps"></div>
       <div id="taskbar-clock"></div>
     </div>
 
+    <!-- Start Menu -->
     <div id="start-menu" class="hidden">
       <div class="start-header">Gethin OS</div>
       <div class="start-apps">
-        <button class="start-app" data-app="about">About Gethin OS</button>
+        <button class="start-app" data-app="about">About</button>
         <button class="start-app" data-app="notes">Notes</button>
+        <button class="start-app" data-app="terminal">Terminal</button>
       </div>
     </div>
 
-    <!-- Window container -->
+    <!-- Window Layer -->
     <div id="window-layer"></div>
+
   </div>
 
   <script src="script.js"></script>
