@@ -2,35 +2,36 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: Segoe UI, sans-serif;
+  font-family: "Segoe UI", system-ui, sans-serif;
 }
 
 body {
-  background: #0f172a;
   height: 100vh;
   overflow: hidden;
-  color: white;
+  background: #000;
+  color: #fff;
 }
 
-/* Boot Screen */
+/* Boot */
+
 #boot-screen {
   position: fixed;
   inset: 0;
   background: #000;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 20px;
+  justify-content: center;
+  gap: 24px;
 }
 
 .boot-logo {
   font-size: 2.4rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
 }
 
 .boot-bar {
-  width: 200px;
+  width: 220px;
   height: 6px;
   background: #222;
   border-radius: 999px;
@@ -41,165 +42,299 @@ body {
   width: 0;
   height: 100%;
   background: #22c55e;
-  animation: boot 2.4s forwards;
+  animation: boot-fill 2.4s forwards;
 }
 
-@keyframes boot {
+@keyframes boot-fill {
   to { width: 100%; }
 }
 
-/* Lock Screen */
+/* Lock */
+
 .hidden { display: none; }
 
 #lock-screen {
   position: fixed;
   inset: 0;
-  background: linear-gradient(135deg, #1e293b, #0f172a);
+  background: radial-gradient(circle at top, #1e293b, #020617);
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+}
+
+.lock-center {
+  text-align: center;
 }
 
 .lock-time {
-  font-size: 3rem;
+  font-size: 3.2rem;
   font-weight: 600;
 }
 
+.lock-date {
+  margin-top: 4px;
+  opacity: 0.8;
+}
+
+.lock-user {
+  margin-top: 16px;
+  font-size: 1.1rem;
+}
+
 #unlock-btn {
+  margin-top: 12px;
   padding: 8px 18px;
-  border-radius: 6px;
+  border-radius: 999px;
   border: none;
-  background: #22c55e;
-  color: #000;
+  background: #2563eb;
+  color: #fff;
   cursor: pointer;
 }
 
-/* Desktop */
+/* OS layout */
+
+#os {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 #desktop {
   flex: 1;
-  background: url("https://wallpapercave.com/wp/wp4923981.jpg");
+  position: relative;
+  background-image: url("https://wallpapercave.com/wp/wp4923981.jpg");
   background-size: cover;
-  padding: 20px;
+  background-position: center;
+  padding: 16px;
   display: flex;
   flex-wrap: wrap;
-  gap: 20px;
+  align-content: flex-start;
+  gap: 16px;
 }
 
+/* Desktop icons */
+
 .desktop-icon {
-  width: 80px;
+  width: 90px;
   text-align: center;
+  color: #e5e7eb;
+  text-shadow: 0 1px 2px #000;
   cursor: pointer;
 }
 
-.icon-square {
-  width: 48px;
-  height: 48px;
-  border-radius: 8px;
-  margin: 0 auto;
+.desktop-icon-img {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 4px;
 }
 
-.icon-about { background: #22c55e; }
-.icon-notes { background: #facc15; }
-.icon-terminal { background: #0ea5e9; }
+.fake-icon {
+  background: rgba(15,23,42,0.8);
+  border-radius: 8px;
+}
 
 /* Taskbar */
+
 #taskbar {
-  height: 42px;
-  background: rgba(30, 41, 59, 0.75);
-  backdrop-filter: blur(12px);
+  height: 44px;
+  background: rgba(15, 23, 42, 0.9);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid rgba(148, 163, 184, 0.4);
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 8px;
+}
+
+#taskbar-left,
+#taskbar-center,
+#taskbar-right {
+  display: flex;
+  align-items: center;
+}
+
+#taskbar-left {
+  gap: 4px;
+}
+
+#taskbar-center {
+  flex: 1;
+  justify-content: center;
+}
+
+#taskbar-right {
   gap: 10px;
 }
 
-#start-button {
-  padding: 6px 12px;
-  background: rgba(255,255,255,0.1);
+/* Start button */
+
+.taskbar-icon {
+  width: 34px;
+  height: 34px;
   border-radius: 6px;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
 }
 
-#taskbar-apps {
-  flex: 1;
+.taskbar-icon:hover {
+  background: rgba(148, 163, 184, 0.25);
+}
+
+#start-button.start {
+  padding: 0;
+}
+
+.win-logo {
+  width: 18px;
+  height: 18px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 1px;
+}
+
+.win-logo span {
+  background: #e5e7eb;
+}
+
+/* Pinned icons */
+
+.pinned-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: #1d4ed8;
   display: flex;
-  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+}
+
+/* Taskbar running apps */
+
+#taskbar-apps {
+  display: flex;
+  gap: 4px;
 }
 
 .taskbar-item {
+  min-width: 80px;
+  max-width: 160px;
   padding: 4px 10px;
-  background: rgba(255,255,255,0.1);
   border-radius: 6px;
+  border: none;
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 0.8rem;
   cursor: pointer;
 }
 
 .taskbar-item.active {
-  background: rgba(34,197,94,0.4);
+  background: rgba(37, 99, 235, 0.7);
 }
 
-#taskbar-clock {
-  opacity: 0.8;
+/* Tray */
+
+.tray-icons {
+  display: flex;
+  gap: 4px;
+  font-size: 0.9rem;
 }
 
-/* Start Menu */
+.tray-clock {
+  text-align: right;
+  font-size: 0.75rem;
+}
+
+.tray-clock div {
+  line-height: 1.1;
+}
+
+/* Start menu */
+
 #start-menu {
   position: fixed;
-  left: 10px;
-  bottom: 50px;
-  width: 260px;
-  background: rgba(30,41,59,0.85);
+  left: 8px;
+  bottom: 48px;
+  width: 320px;
+  background: rgba(15, 23, 42, 0.96);
   backdrop-filter: blur(18px);
   border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.7);
   overflow: hidden;
 }
 
 .start-header {
-  padding: 10px;
+  padding: 10px 12px;
   font-weight: 600;
-  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(51, 65, 85, 1);
 }
 
-.start-apps {
-  padding: 10px;
-  display: flex;
-  flex-direction: column;
+.start-section {
+  padding: 10px 12px 12px;
+}
+
+.start-section-title {
+  font-size: 0.8rem;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.start-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: 6px;
 }
 
 .start-app {
-  padding: 6px;
-  background: rgba(255,255,255,0.05);
+  padding: 8px 6px;
+  border-radius: 8px;
   border: none;
-  border-radius: 6px;
-  color: white;
-  text-align: left;
+  background: rgba(30, 64, 175, 0.7);
+  color: #e5e7eb;
+  font-size: 0.8rem;
   cursor: pointer;
 }
 
 /* Windows */
+
+#window-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
 .window {
   position: absolute;
-  width: 380px;
-  background: rgba(15,23,42,0.85);
-  backdrop-filter: blur(12px);
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.1);
-  overflow: hidden;
+  width: 420px;
+  min-height: 220px;
+  background: rgba(15, 23, 42, 0.96);
+  backdrop-filter: blur(18px);
+  border-radius: 10px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.8);
+  display: flex;
+  flex-direction: column;
+  pointer-events: auto;
 }
 
 .window-header {
   height: 32px;
-  background: rgba(255,255,255,0.05);
   display: flex;
   align-items: center;
   padding: 0 10px;
+  background: linear-gradient(90deg, #0f172a, #1e293b);
   cursor: grab;
 }
 
 .window-header-title {
   flex: 1;
+  font-size: 0.85rem;
 }
 
 .window-controls {
@@ -219,18 +354,74 @@ body {
 .window-btn.close { background: #ef4444; }
 
 .window-content {
-  padding: 12px;
+  padding: 10px;
+  font-size: 0.85rem;
 }
 
 /* Notes */
+
 .notes-textarea {
   width: 100%;
   height: 200px;
-  background: #0f172a;
-  border: 1px solid #334155;
+  background: #020617;
   border-radius: 6px;
-  color: white;
+  border: 1px solid #334155;
+  color: #e5e7eb;
   padding: 8px;
   resize: vertical;
-  font-family: monospace;
+  font-family: Consolas, monospace;
+}
+
+/* Terminal */
+
+.terminal-root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #020617;
+  border-radius: 6px;
+  border: 1px solid #1f2937;
+  overflow: hidden;
+}
+
+.terminal-header {
+  padding: 4px 8px;
+  background: #111827;
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+.terminal-output {
+  flex: 1;
+  padding: 8px;
+  font-family: Consolas, monospace;
+  font-size: 0.8rem;
+  color: #e5e7eb;
+  overflow-y: auto;
+  white-space: pre-wrap;
+}
+
+.terminal-input-row {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  gap: 4px;
+  background: #020617;
+  border-top: 1px solid #111827;
+}
+
+.terminal-prompt {
+  color: #22c55e;
+  font-family: Consolas, monospace;
+  font-size: 0.8rem;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e5e7eb;
+  font-family: Consolas, monospace;
+  font-size: 0.8rem;
 }
