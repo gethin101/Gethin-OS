@@ -44,13 +44,16 @@
       <button class="taskbar-icon pinned" data-app="terminal">
         <img src="assets/terminal.png" class="taskbar-icon-img" />
       </button>
+      <div id="taskbar-apps"></div>
     </div>
 
     <div id="taskbar-right">
       <button id="volume-button" class="tray-btn">
-        <span class="tray-icon">🔊</span>
+        <span id="volume-icon" class="tray-icon">🔊</span>
       </button>
-      <span class="tray-icon">📶</span>
+      <button id="wifi-button" class="tray-btn">
+        <span class="tray-icon">📶</span>
+      </button>
       <span class="tray-icon">🔋</span>
       <button id="datetime-button" class="tray-clock-btn">
         <div class="tray-clock">
@@ -76,9 +79,20 @@
     <div class="popup-section">
       <div class="popup-title">Volume</div>
       <div class="volume-row">
+        <span id="volume-icon-popup" class="tray-icon">🔊</span>
         <input id="volume-slider" type="range" min="0" max="100" value="70" />
-        <button id="mute-button" class="popup-button">Mute</button>
       </div>
+    </div>
+  </div>
+
+  <!-- WiFi Popup -->
+  <div id="wifi-popup" class="popup hidden">
+    <div class="popup-section">
+      <div class="popup-title">Wi‑Fi</div>
+      <div class="wifi-network"><strong>Your Wi‑Fi</strong> — Connected, secured</div>
+      <div class="wifi-network">Neighbour 1 Wi‑Fi</div>
+      <div class="wifi-network">Neighbour 2 Wi‑Fi</div>
+      <div class="wifi-network">Guest Wi‑Fi</div>
     </div>
   </div>
 
