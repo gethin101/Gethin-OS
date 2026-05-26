@@ -3,95 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <title>Gethin OS</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Boot -->
-  <div id="boot-screen">
-    <div class="boot-logo">Gethin OS</div>
-    <div class="boot-bar"><div class="boot-bar-fill"></div></div>
-  </div>
 
-  <!-- Lock -->
-  <div id="lock-screen" class="hidden">
-    <div class="lock-center">
-      <div id="lock-time" class="lock-time"></div>
-      <div id="lock-date" class="lock-date"></div>
-      <div class="lock-user">gethin</div>
-      <button id="unlock-btn">Sign in</button>
+  <!-- Desktop -->
+  <div id="desktop">
+    <div class="desktop-icon" data-app="about">
+      <img src="assets/about.png" class="desktop-icon-img" />
+      <span>About</span>
+    </div>
+
+    <div class="desktop-icon" data-app="notes">
+      <img src="assets/notes.png" class="desktop-icon-img" />
+      <span>Notes</span>
+    </div>
+
+    <div class="desktop-icon" data-app="terminal">
+      <img src="assets/terminal.png" class="desktop-icon-img" />
+      <span>Terminal</span>
     </div>
   </div>
 
-  <!-- OS -->
-  <div id="os" class="hidden">
-    <div id="desktop">
-      <div class="desktop-icon" data-app="about">
-        <img src="" alt="" class="desktop-icon-img fake-icon" />
-        <span>About Gethin OS</span>
-      </div>
-      <div class="desktop-icon" data-app="notes">
-        <img src="" alt="" class="desktop-icon-img fake-icon" />
-        <span>Notes</span>
-      </div>
-      <div class="desktop-icon" data-app="terminal">
-        <img src="" alt="" class="desktop-icon-img fake-icon" />
-        <span>Terminal</span>
-      </div>
+  <!-- Taskbar -->
+  <div id="taskbar">
+    <div id="taskbar-left">
+      <button id="start-button" class="taskbar-icon">
+        <img src="assets/about.png" class="taskbar-icon-img" />
+      </button>
+
+      <button class="taskbar-icon pinned" data-app="about">
+        <img src="assets/about.png" class="taskbar-icon-img" />
+      </button>
+
+      <button class="taskbar-icon pinned" data-app="notes">
+        <img src="assets/notes.png" class="taskbar-icon-img" />
+      </button>
+
+      <button class="taskbar-icon pinned" data-app="terminal">
+        <img src="assets/terminal.png" class="taskbar-icon-img" />
+      </button>
     </div>
 
-    <!-- Taskbar -->
-    <div id="taskbar">
-      <div id="taskbar-left">
-        <button id="start-button" class="taskbar-icon start">
-          <span class="win-logo">
-            <span></span><span></span><span></span><span></span>
-          </span>
-        </button>
-        <button class="taskbar-icon pinned" data-app="about" title="About">
-          <span class="pinned-dot">A</span>
-        </button>
-        <button class="taskbar-icon pinned" data-app="notes" title="Notes">
-          <span class="pinned-dot">N</span>
-        </button>
-        <button class="taskbar-icon pinned" data-app="terminal" title="Terminal">
-          <span class="pinned-dot">T</span>
-        </button>
-      </div>
-
-      <div id="taskbar-center">
-        <div id="taskbar-apps"></div>
-      </div>
-
-      <div id="taskbar-right">
-        <div class="tray-icons">
-          <span class="tray-icon">🔊</span>
-          <span class="tray-icon">📶</span>
-          <span class="tray-icon">🔋</span>
-        </div>
-        <div class="tray-clock">
-          <div id="tray-time"></div>
-          <div id="tray-date"></div>
-        </div>
-      </div>
+    <div id="taskbar-center">
+      <div id="taskbar-apps"></div>
     </div>
 
-    <!-- Start menu -->
-    <div id="start-menu" class="hidden">
-      <div class="start-header">Gethin OS</div>
-      <div class="start-section">
-        <div class="start-section-title">Pinned</div>
-        <div class="start-grid">
-          <button class="start-app" data-app="about">About</button>
-          <button class="start-app" data-app="notes">Notes</button>
-          <button class="start-app" data-app="terminal">Terminal</button>
-        </div>
+    <div id="taskbar-right">
+      <span class="tray-icon">🔊</span>
+      <span class="tray-icon">📶</span>
+      <span class="tray-icon">🔋</span>
+      <div class="tray-clock">
+        <div id="tray-time"></div>
+        <div id="tray-date"></div>
       </div>
     </div>
-
-    <!-- Window layer -->
-    <div id="window-layer"></div>
   </div>
+
+  <!-- Start Menu -->
+  <div id="start-menu" class="hidden">
+    <div class="start-header">Gethin OS</div>
+    <div class="start-grid">
+      <button class="start-app" data-app="about">About</button>
+      <button class="start-app" data-app="notes">Notes</button>
+      <button class="start-app" data-app="terminal">Terminal</button>
+    </div>
+  </div>
+
+  <!-- Windows -->
+  <div id="window-layer"></div>
 
   <script src="script.js"></script>
 </body>
