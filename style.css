@@ -23,7 +23,7 @@ body {
 }
 
 .desktop-icon {
-  width: 90px;
+  width: 110px;
   text-align: center;
   color: white;
   text-shadow: 0 1px 3px black;
@@ -35,6 +35,17 @@ body {
   width: 48px;
   height: 48px;
   margin-bottom: 6px;
+}
+
+.desktop-icon span {
+  display: block;
+  white-space: nowrap;
+}
+
+/* soundboard bigger icon */
+.soundboard-icon-big {
+  width: 96px;
+  height: 96px;
 }
 
 /* Taskbar */
@@ -412,6 +423,17 @@ body {
   flex: 1;
 }
 
+/* Battery popup */
+.battery-status-main {
+  font-size: 1.1rem;
+  margin-bottom: 4px;
+}
+
+.battery-status-sub {
+  font-size: 0.8rem;
+  opacity: 0.8;
+}
+
 /* Calendar popup */
 .calendar-grid {
   display: grid;
@@ -569,6 +591,6 @@ body {
   }
 
   .desktop-icon {
-    width: 80px;
+    width: 100px;
   }
 }
