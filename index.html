@@ -10,6 +10,11 @@
 
   <!-- Desktop -->
   <div id="desktop">
+    <div class="desktop-icon" data-app="explorer">
+      <img src="assets/explorer.png" class="desktop-icon-img" />
+      <span>File Explorer</span>
+    </div>
+
     <div class="desktop-icon" data-app="notes">
       <img src="assets/notes.png" class="desktop-icon-img" />
       <span>Notes</span>
@@ -30,8 +35,14 @@
     </div>
 
     <div id="taskbar-center">
+      <button class="taskbar-icon pinned" data-app="explorer">
+        <img src="assets/explorer.png" class="taskbar-icon-img" />
+      </button>
       <button class="taskbar-icon pinned" data-app="notes">
         <img src="assets/notes.png" class="taskbar-icon-img" />
+      </button>
+      <button class="taskbar-icon pinned" data-app="terminal">
+        <img src="assets/terminal.png" class="taskbar-icon-img" />
       </button>
     </div>
 
@@ -54,6 +65,7 @@
   <div id="start-menu" class="hidden">
     <div class="start-header">Gethin OS</div>
     <div class="start-grid">
+      <button class="start-app" data-app="explorer">File Explorer</button>
       <button class="start-app" data-app="notes">Notes</button>
       <button class="start-app" data-app="terminal">Terminal</button>
     </div>
@@ -75,15 +87,6 @@
     <div class="popup-section">
       <div class="popup-title" id="popup-date-title"></div>
       <div class="calendar-grid" id="calendar-grid"></div>
-    </div>
-    <div class="popup-section focus-section">
-      <div class="popup-title">Focus</div>
-      <div class="focus-row">
-        <button class="focus-minus">-</button>
-        <span id="focus-duration">30 mins</span>
-        <button class="focus-plus">+</button>
-      </div>
-      <button class="popup-button focus-button">Focus</button>
     </div>
   </div>
 
