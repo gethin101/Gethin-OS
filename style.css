@@ -49,6 +49,7 @@ body {
   display: flex;
   align-items: center;
   padding: 0 10px;
+  z-index: 50;
 }
 
 #taskbar-left,
@@ -132,6 +133,34 @@ body {
   background: rgba(255,255,255,0.2);
 }
 
+/* Minimized area (bottom-right pills) */
+#minimized-area {
+  position: absolute;
+  right: 10px;
+  bottom: 60px;
+  display: flex;
+  gap: 6px;
+  z-index: 60;
+}
+
+.minimized-pill {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(15,15,15,0.9);
+  color: white;
+  font-size: 0.75rem;
+  border: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.minimized-pill-icon {
+  width: 14px;
+  height: 14px;
+}
+
 /* Tray */
 .tray-icon {
   font-size: 1.1rem;
@@ -179,6 +208,7 @@ body {
   border-radius: 10px;
   padding: 12px;
   color: white;
+  z-index: 70;
 }
 
 .hidden {
@@ -278,18 +308,34 @@ body {
   font-family: monospace;
 }
 
+.notes-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notes-clear-btn {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(239,68,68,0.9);
+  color: white;
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
 /* Terminal */
 .terminal-root {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #000;
+  background: #0c0c0c;
   border-radius: 4px;
   overflow: hidden;
 }
 
 .terminal-titlebar {
-  background: #0c0c0c;
+  background: #202020;
   color: #fff;
   font-size: 0.8rem;
   padding: 4px 8px;
@@ -338,7 +384,7 @@ body {
   border-radius: 10px;
   padding: 10px;
   color: white;
-  z-index: 999;
+  z-index: 80;
 }
 
 .popup-section {
@@ -487,6 +533,23 @@ body {
 
 .viewer-save {
   margin-top: 8px;
+}
+
+/* Soundboard */
+.soundboard-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.soundboard-btn {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  background: rgba(59,130,246,0.25);
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
 }
 
 /* iPad tweaks */
