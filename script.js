@@ -5,8 +5,12 @@ const taskbarApps = document.getElementById("taskbar-apps");
 
 const volumeButton = document.getElementById("volume-button");
 const volumePopup = document.getElementById("volume-popup");
-const muteButton = document.getElementById("mute-button");
 const volumeSlider = document.getElementById("volume-slider");
+const volumeIcon = document.getElementById("volume-icon");
+const volumeIconPopup = document.getElementById("volume-icon-popup");
+
+const wifiButton = document.getElementById("wifi-button");
+const wifiPopup = document.getElementById("wifi-popup");
 
 const datetimeButton = document.getElementById("datetime-button");
 const datetimePopup = document.getElementById("datetime-popup");
@@ -71,42 +75,71 @@ startButton.onclick = (e) => {
   e.stopPropagation();
   startMenu.classList.toggle("hidden");
   volumePopup.classList.add("hidden");
+  wifiPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
 };
 
 document.addEventListener("click", () => {
   startMenu.classList.add("hidden");
   volumePopup.classList.add("hidden");
+  wifiPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
 });
 
 /* Stop clicks inside popups from closing everything */
-[startMenu, volumePopup, datetimePopup].forEach(el => {
+[startMenu, volumePopup, wifiPopup, datetimePopup].forEach(el => {
   el.addEventListener("click", (e) => e.stopPropagation());
 });
 
-/* Volume popup */
+/* Volume popup + mute logic */
+function updateVolumeUI() {
+  const isMuted = muted || volumeSlider.value === "0";
+  const cls = "tray-icon-muted";
+  [volumeIcon, volumeIconPopup].forEach(icon => {
+    if (!icon) return;
+    if (isMuted) icon.classList.add(cls);
+    else icon.classList.remove(cls);
+  });
+}
+
 volumeButton.onclick = (e) => {
   e.stopPropagation();
   const isHidden = volumePopup.classList.contains("hidden");
   volumePopup.classList.add("hidden");
+  wifiPopup.classList.add("hidden");
   datetimePopup.classList.add("hidden");
   if (isHidden) volumePopup.classList.remove("hidden");
 };
 
-muteButton.onclick = () => {
+volumeIconPopup.onclick = () => {
   muted = !muted;
-  muteButton.textContent = muted ? "Unmute" : "Mute";
+  if (muted) {
+    volumeSlider.value = 0;
+  } else if (volumeSlider.value === "0") {
+    volumeSlider.value = 50;
+  }
+  updateVolumeUI();
 };
 
 volumeSlider.oninput = () => {
   if (volumeSlider.value === "0") {
     muted = true;
-    muteButton.textContent = "Unmute";
-  } else if (muted) {
+  } else {
     muted = false;
-    muteButton.textContent = "Mute";
   }
+  updateVolumeUI();
+};
+
+updateVolumeUI();
+
+/* WiFi popup */
+wifiButton.onclick = (e) => {
+  e.stopPropagation();
+  const isHidden = wifiPopup.classList.contains("hidden");
+  wifiPopup.classList.add("hidden");
+  volumePopup.classList.add("hidden");
+  datetimePopup.classList.add("hidden");
+  if (isHidden) wifiPopup.classList.remove("hidden");
 };
 
 /* Date/time popup */
@@ -115,26 +148,27 @@ datetimeButton.onclick = (e) => {
   const isHidden = datetimePopup.classList.contains("hidden");
   datetimePopup.classList.add("hidden");
   volumePopup.classList.add("hidden");
+  wifiPopup.classList.add("hidden");
   if (isHidden) {
     renderCalendar();
     datetimePopup.classList.remove("hidden");
   }
 };
 
-/* Apps */
+/* File data */
 const explorerFiles = [
-  { name: "notes.txt", type: "text", content: "These are your notes.\nYou can edit them in the Notes app." },
-  { name: "readme.txt", type: "text", content: "Welcome to Gethin OS.\nThis is a fake file explorer." },
-  { name: "wallpaper.jpg", type: "image", src: "assets/wallpaper.jpg" },
-  { name: "notes.png", type: "image", src: "assets/notes.png" },
-  { name: "terminal.png", type: "image", src: "assets/terminal.png" },
-  { name: "explorer.png", type: "image", src: "assets/explorer.png" },
-  { name: "start.png", type: "image", src: "assets/start.png" },
-  { name: "template1.txt", type: "text", content: "Template text file 1." },
-  { name: "template2.txt", type: "text", content: "Template text file 2." },
-  { name: "photo1.jpg", type: "image", src: "assets/wallpaper.jpg" },
+  { name: "notes.txt", type: "text", folder: "Documents", content: "These are your notes.\nYou can edit them in the Notes app or here." },
+  { name: "readme.txt", type: "text", folder: "Documents", content: "Welcome to Gethin OS.\nThis is a fake file explorer." },
+  { name: "template1.txt", type: "text", folder: "Documents", content: "Template text file 1." },
+  { name: "template2.txt", type: "text", folder: "Downloads", content: "Template text file 2." },
+  { name: "wallpaper.jpg", type: "image", folder: "Assets", src: "assets/wallpaper.jpg" },
+  { name: "notes.png", type: "image", folder: "Assets", src: "assets/notes.png" },
+  { name: "terminal.png", type: "image", folder: "Assets", src: "assets/terminal.png" },
+  { name: "explorer.png", type: "image", folder: "Assets", src: "assets/explorer.png" },
+  { name: "start.png", type: "image", folder: "Assets", src: "assets/start.png" },
 ];
 
+/* Apps */
 const apps = {
   explorer: {
     title: "File Explorer",
@@ -146,11 +180,12 @@ const apps = {
       sidebar.className = "explorer-sidebar";
       sidebar.innerHTML = `
         <h4>Home</h4>
-        <div class="explorer-nav-item">Desktop</div>
-        <div class="explorer-nav-item">Downloads</div>
-        <div class="explorer-nav-item">Documents</div>
-        <div class="explorer-nav-item">Pictures</div>
-        <div class="explorer-nav-item">Music</div>
+        <div class="explorer-nav-item" data-folder="Home">Home</div>
+        <div class="explorer-nav-item" data-folder="Desktop">Desktop</div>
+        <div class="explorer-nav-item" data-folder="Documents">Documents</div>
+        <div class="explorer-nav-item" data-folder="Downloads">Downloads</div>
+        <div class="explorer-nav-item" data-folder="Pictures">Pictures</div>
+        <div class="explorer-nav-item" data-folder="Assets">Assets</div>
       `;
 
       const main = document.createElement("div");
@@ -158,30 +193,69 @@ const apps = {
 
       const header = document.createElement("div");
       header.className = "explorer-header";
-      header.textContent = "Recent files";
 
       const filesContainer = document.createElement("div");
       filesContainer.className = "explorer-files";
 
-      explorerFiles.forEach(file => {
-        const row = document.createElement("div");
-        row.className = "explorer-file-row";
+      function renderFolder(folder) {
+        header.textContent = folder === "Home" ? "Recent files" : folder;
+        filesContainer.innerHTML = "";
 
-        const name = document.createElement("div");
-        name.className = "explorer-file-name";
-        name.textContent = file.name;
+        let files;
+        if (folder === "Home") {
+          files = explorerFiles;
+        } else if (folder === "Assets") {
+          files = explorerFiles.filter(f => f.folder === "Assets");
+        } else {
+          files = explorerFiles.filter(f => f.folder === folder);
+        }
 
-        const type = document.createElement("div");
-        type.className = "explorer-file-type";
-        type.textContent = file.type === "text" ? "Text" : "Image";
+        if (!files.length && folder !== "Assets") {
+          const msg = document.createElement("div");
+          msg.textContent = "This folder is empty.";
+          filesContainer.appendChild(msg);
+          return;
+        }
 
-        row.appendChild(name);
-        row.appendChild(type);
+        if (!files.length && folder === "Assets") {
+          const msg = document.createElement("div");
+          msg.textContent = "No assets found.";
+          filesContainer.appendChild(msg);
+          return;
+        }
 
-        row.addEventListener("click", () => openFileViewer(file));
+        files.forEach(file => {
+          const row = document.createElement("div");
+          row.className = "explorer-file-row";
 
-        filesContainer.appendChild(row);
+          const name = document.createElement("div");
+          name.className = "explorer-file-name";
+          name.textContent = file.name;
+
+          const type = document.createElement("div");
+          type.className = "explorer-file-type";
+          type.textContent = file.type === "text" ? "Text" : "Image";
+
+          row.appendChild(name);
+          row.appendChild(type);
+
+          row.addEventListener("click", () => openFileViewer(file));
+
+          filesContainer.appendChild(row);
+        });
+      }
+
+      sidebar.querySelectorAll(".explorer-nav-item").forEach(item => {
+        item.addEventListener("click", () => {
+          sidebar.querySelectorAll(".explorer-nav-item").forEach(i => i.classList.remove("active"));
+          item.classList.add("active");
+          renderFolder(item.dataset.folder);
+        });
       });
+
+      // default
+      sidebar.querySelector('[data-folder="Home"]').classList.add("active");
+      renderFolder("Home");
 
       main.appendChild(header);
       main.appendChild(filesContainer);
@@ -205,14 +279,14 @@ const apps = {
   },
 
   terminal: {
-    title: "Windows PowerShell",
+    title: "Terminal",
     createContent() {
       const root = document.createElement("div");
       root.className = "terminal-root";
 
       const titlebar = document.createElement("div");
       titlebar.className = "terminal-titlebar";
-      titlebar.textContent = "Windows PowerShell";
+      titlebar.textContent = "Terminal";
 
       const output = document.createElement("div");
       output.className = "terminal-output";
@@ -267,9 +341,10 @@ const apps = {
         }
       });
 
-      print("Windows PowerShell");
-      print("(Fake) Gethin OS shell");
-      print("Type 'help'");
+      print("Microsoft Windows [Version 10.0.19045.0000]");
+      print("(c) Microsoft Corporation. All rights reserved.");
+      print("");
+      print("C:\\Users\\user> Type 'help'");
 
       setTimeout(() => input.focus(), 50);
 
@@ -278,7 +353,7 @@ const apps = {
   },
 };
 
-/* File viewer (separate window) */
+/* File viewer (editable text + images) */
 function openFileViewer(file) {
   const win = document.createElement("div");
   win.className = "window";
@@ -293,9 +368,20 @@ function openFileViewer(file) {
   const controls = document.createElement("div");
   controls.className = "window-controls";
 
+  const min = document.createElement("button");
+  min.className = "window-btn min";
+  min.textContent = "–";
+
+  const max = document.createElement("button");
+  max.className = "window-btn max";
+  max.textContent = "□";
+
   const close = document.createElement("button");
   close.className = "window-btn close";
+  close.textContent = "X";
 
+  controls.appendChild(min);
+  controls.appendChild(max);
   controls.appendChild(close);
   header.appendChild(title);
   header.appendChild(controls);
@@ -303,11 +389,21 @@ function openFileViewer(file) {
   const content = document.createElement("div");
   content.className = "window-content viewer-content";
 
+  let textarea = null;
+
   if (file.type === "text") {
-    const pre = document.createElement("div");
-    pre.className = "viewer-text";
-    pre.textContent = file.content || "";
-    content.appendChild(pre);
+    textarea = document.createElement("textarea");
+    textarea.className = "viewer-textarea";
+    textarea.value = file.content || "";
+    content.appendChild(textarea);
+
+    const saveBtn = document.createElement("button");
+    saveBtn.className = "popup-button viewer-save";
+    saveBtn.textContent = "Save";
+    saveBtn.addEventListener("click", () => {
+      file.content = textarea.value;
+    });
+    content.appendChild(saveBtn);
   } else if (file.type === "image") {
     const img = document.createElement("img");
     img.className = "viewer-image";
@@ -319,18 +415,22 @@ function openFileViewer(file) {
   win.appendChild(content);
   windowLayer.appendChild(win);
 
-  win.style.left = "120px";
+  win.style.left = "140px";
   win.style.top = "120px";
   win.style.zIndex = ++z;
 
-  function focus() {
+  let isMax = false;
+  const prevPos = { left: 0, top: 0, width: 0, height: 0 };
+
+  function focusWin() {
     win.style.zIndex = ++z;
   }
 
-  win.addEventListener("mousedown", focus);
+  win.addEventListener("mousedown", focusWin);
 
   let drag = false, dx = 0, dy = 0;
   header.addEventListener("mousedown", (e) => {
+    if (isMax) return;
     drag = true;
     dx = e.clientX - win.offsetLeft;
     dy = e.clientY - win.offsetTop;
@@ -341,6 +441,28 @@ function openFileViewer(file) {
     win.style.top = e.clientY - dy + "px";
   });
   document.addEventListener("mouseup", () => drag = false);
+
+  min.onclick = () => win.classList.add("hidden");
+
+  max.onclick = () => {
+    if (!isMax) {
+      prevPos.left = win.offsetLeft;
+      prevPos.top = win.offsetTop;
+      prevPos.width = win.offsetWidth;
+      prevPos.height = win.offsetHeight;
+      win.style.left = "0px";
+      win.style.top = "0px";
+      win.style.width = window.innerWidth + "px";
+      win.style.height = (window.innerHeight - 52) + "px";
+      isMax = true;
+    } else {
+      win.style.left = prevPos.left + "px";
+      win.style.top = prevPos.top + "px";
+      win.style.width = prevPos.width + "px";
+      win.style.height = prevPos.height + "px";
+      isMax = false;
+    }
+  };
 
   close.onclick = () => win.remove();
 }
@@ -370,11 +492,18 @@ function createWindow(appId, opts = {}) {
 
   const min = document.createElement("button");
   min.className = "window-btn min";
+  min.textContent = "–";
+
+  const max = document.createElement("button");
+  max.className = "window-btn max";
+  max.textContent = "□";
 
   const close = document.createElement("button");
   close.className = "window-btn close";
+  close.textContent = "X";
 
   controls.appendChild(min);
+  controls.appendChild(max);
   controls.appendChild(close);
 
   header.appendChild(title);
@@ -397,9 +526,9 @@ function createWindow(appId, opts = {}) {
   taskItem.textContent = app.title;
   taskbarApps.appendChild(taskItem);
 
-  openWindows[appId] = { win, taskItem };
+  openWindows[appId] = { win, taskItem, isMax: false, prevPos: {} };
 
-  function focus() {
+  function focusThis() {
     win.style.zIndex = ++z;
     document.querySelectorAll(".taskbar-item").forEach((i) =>
       i.classList.remove("active")
@@ -407,12 +536,13 @@ function createWindow(appId, opts = {}) {
     taskItem.classList.add("active");
   }
 
-  win.addEventListener("mousedown", focus);
-  taskItem.addEventListener("click", focus);
+  win.addEventListener("mousedown", focusThis);
+  taskItem.addEventListener("click", focusThis);
 
   let drag = false, dx = 0, dy = 0;
 
   header.addEventListener("mousedown", (e) => {
+    if (openWindows[appId].isMax) return;
     drag = true;
     dx = e.clientX - win.offsetLeft;
     dy = e.clientY - win.offsetTop;
@@ -428,13 +558,36 @@ function createWindow(appId, opts = {}) {
 
   min.onclick = () => win.classList.add("hidden");
 
+  max.onclick = () => {
+    const entry = openWindows[appId];
+    if (!entry.isMax) {
+      entry.prevPos = {
+        left: win.offsetLeft,
+        top: win.offsetTop,
+        width: win.offsetWidth,
+        height: win.offsetHeight,
+      };
+      win.style.left = "0px";
+      win.style.top = "0px";
+      win.style.width = window.innerWidth + "px";
+      win.style.height = (window.innerHeight - 52) + "px";
+      entry.isMax = true;
+    } else {
+      win.style.left = entry.prevPos.left + "px";
+      win.style.top = entry.prevPos.top + "px";
+      win.style.width = entry.prevPos.width + "px";
+      win.style.height = entry.prevPos.height + "px";
+      entry.isMax = false;
+    }
+  };
+
   close.onclick = () => {
     win.remove();
     taskItem.remove();
     delete openWindows[appId];
   };
 
-  focus();
+  focusThis();
 }
 
 function focus(appId) {
@@ -447,12 +600,12 @@ function focus(appId) {
   entry.taskItem.classList.add("active");
 }
 
-/* Desktop icons */
+/* Desktop icons (double-click like Windows) */
 document.querySelectorAll(".desktop-icon").forEach((icon) => {
   icon.addEventListener("dblclick", () => createWindow(icon.dataset.app));
 });
 
-/* Start menu apps */
+/* Start menu apps (single click) */
 document.querySelectorAll(".start-app").forEach((btn) => {
   btn.onclick = () => {
     createWindow(btn.dataset.app);
@@ -460,7 +613,7 @@ document.querySelectorAll(".start-app").forEach((btn) => {
   };
 });
 
-/* Pinned apps */
+/* Pinned apps (single click) */
 document.querySelectorAll(".pinned").forEach((btn) => {
   btn.onclick = () => createWindow(btn.dataset.app);
 });
