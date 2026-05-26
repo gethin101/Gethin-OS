@@ -7,61 +7,90 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-  <!-- Boot Screen -->
+  <!-- Boot -->
   <div id="boot-screen">
     <div class="boot-logo">Gethin OS</div>
     <div class="boot-bar"><div class="boot-bar-fill"></div></div>
   </div>
 
-  <!-- Lock Screen -->
+  <!-- Lock -->
   <div id="lock-screen" class="hidden">
-    <div id="lock-time" class="lock-time"></div>
-    <div class="lock-user">gethin</div>
-    <button id="unlock-btn">Enter</button>
+    <div class="lock-center">
+      <div id="lock-time" class="lock-time"></div>
+      <div id="lock-date" class="lock-date"></div>
+      <div class="lock-user">gethin</div>
+      <button id="unlock-btn">Sign in</button>
+    </div>
   </div>
 
   <!-- OS -->
   <div id="os" class="hidden">
-
-    <!-- Desktop -->
     <div id="desktop">
       <div class="desktop-icon" data-app="about">
-        <div class="icon-square icon-about"></div>
-        <span>About</span>
+        <img src="" alt="" class="desktop-icon-img fake-icon" />
+        <span>About Gethin OS</span>
       </div>
-
       <div class="desktop-icon" data-app="notes">
-        <div class="icon-square icon-notes"></div>
+        <img src="" alt="" class="desktop-icon-img fake-icon" />
         <span>Notes</span>
       </div>
-
       <div class="desktop-icon" data-app="terminal">
-        <div class="icon-square icon-terminal"></div>
+        <img src="" alt="" class="desktop-icon-img fake-icon" />
         <span>Terminal</span>
       </div>
     </div>
 
     <!-- Taskbar -->
     <div id="taskbar">
-      <div id="start-button">⊞</div>
-      <div id="taskbar-apps"></div>
-      <div id="taskbar-clock"></div>
-    </div>
+      <div id="taskbar-left">
+        <button id="start-button" class="taskbar-icon start">
+          <span class="win-logo">
+            <span></span><span></span><span></span><span></span>
+          </span>
+        </button>
+        <button class="taskbar-icon pinned" data-app="about" title="About">
+          <span class="pinned-dot">A</span>
+        </button>
+        <button class="taskbar-icon pinned" data-app="notes" title="Notes">
+          <span class="pinned-dot">N</span>
+        </button>
+        <button class="taskbar-icon pinned" data-app="terminal" title="Terminal">
+          <span class="pinned-dot">T</span>
+        </button>
+      </div>
 
-    <!-- Start Menu -->
-    <div id="start-menu" class="hidden">
-      <div class="start-header">Gethin OS</div>
-      <div class="start-apps">
-        <button class="start-app" data-app="about">About</button>
-        <button class="start-app" data-app="notes">Notes</button>
-        <button class="start-app" data-app="terminal">Terminal</button>
+      <div id="taskbar-center">
+        <div id="taskbar-apps"></div>
+      </div>
+
+      <div id="taskbar-right">
+        <div class="tray-icons">
+          <span class="tray-icon">🔊</span>
+          <span class="tray-icon">📶</span>
+          <span class="tray-icon">🔋</span>
+        </div>
+        <div class="tray-clock">
+          <div id="tray-time"></div>
+          <div id="tray-date"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Window Layer -->
-    <div id="window-layer"></div>
+    <!-- Start menu -->
+    <div id="start-menu" class="hidden">
+      <div class="start-header">Gethin OS</div>
+      <div class="start-section">
+        <div class="start-section-title">Pinned</div>
+        <div class="start-grid">
+          <button class="start-app" data-app="about">About</button>
+          <button class="start-app" data-app="notes">Notes</button>
+          <button class="start-app" data-app="terminal">Terminal</button>
+        </div>
+      </div>
+    </div>
 
+    <!-- Window layer -->
+    <div id="window-layer"></div>
   </div>
 
   <script src="script.js"></script>
