@@ -3,44 +3,141 @@ const startMenu = document.getElementById("start-menu");
 const windowLayer = document.getElementById("window-layer");
 const taskbarApps = document.getElementById("taskbar-apps");
 
+const volumeButton = document.getElementById("volume-button");
+const volumePopup = document.getElementById("volume-popup");
+const muteButton = document.getElementById("mute-button");
+const volumeSlider = document.getElementById("volume-slider");
+
+const datetimeButton = document.getElementById("datetime-button");
+const datetimePopup = document.getElementById("datetime-popup");
+const trayTime = document.getElementById("tray-time");
+const trayDate = document.getElementById("tray-date");
+const popupDateTitle = document.getElementById("popup-date-title");
+const calendarGrid = document.getElementById("calendar-grid");
+const focusDurationEl = document.getElementById("focus-duration");
+
 let z = 10;
 const openWindows = {};
+let muted = false;
+let focusMinutes = 30;
 
+/* Clock + date */
 function updateClock() {
   const now = new Date();
-  document.getElementById("tray-time").textContent =
-    now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  document.getElementById("tray-date").textContent =
-    now.toLocaleDateString();
+  trayTime.textContent = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  trayDate.textContent = now.toLocaleDateString();
 }
 setInterval(updateClock, 1000);
 updateClock();
+
+/* Calendar rendering */
+function renderCalendar() {
+  const now = new Date();
+  popupDateTitle.textContent = now.toLocaleDateString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  calendarGrid.innerHTML = "";
+
+  const headers = ["Su","Mo","Tu","We","Th","Fr","Sa"];
+  headers.forEach(h => {
+    const el = document.createElement("div");
+    el.className = "calendar-day header";
+    el.textContent = h;
+    calendarGrid.appendChild(el);
+  });
+
+  const first = new Date(now.getFullYear(), now.getMonth(), 1);
+  const startDay = first.getDay();
+  const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
+
+  for (let i = 0; i < startDay; i++) {
+    const empty = document.createElement("div");
+    calendarGrid.appendChild(empty);
+  }
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement("div");
+    el.className = "calendar-day";
+    el.textContent = d;
+    if (d === now.getDate()) el.classList.add("today");
+    calendarGrid.appendChild(el);
+  }
+}
 
 /* Start menu */
 startButton.onclick = (e) => {
   e.stopPropagation();
   startMenu.classList.toggle("hidden");
+  volumePopup.classList.add("hidden");
+  datetimePopup.classList.add("hidden");
 };
 
 document.addEventListener("click", () => {
   startMenu.classList.add("hidden");
+  volumePopup.classList.add("hidden");
+  datetimePopup.classList.add("hidden");
 });
+
+/* Stop clicks inside popups from closing everything */
+[startMenu, volumePopup, datetimePopup].forEach(el => {
+  el.addEventListener("click", (e) => e.stopPropagation());
+});
+
+/* Volume popup */
+volumeButton.onclick = (e) => {
+  e.stopPropagation();
+  const isHidden = volumePopup.classList.contains("hidden");
+  volumePopup.classList.add("hidden");
+  datetimePopup.classList.add("hidden");
+  if (isHidden) volumePopup.classList.remove("hidden");
+};
+
+muteButton.onclick = () => {
+  muted = !muted;
+  muteButton.textContent = muted ? "Unmute" : "Mute";
+};
+
+volumeSlider.oninput = () => {
+  if (volumeSlider.value === "0") {
+    muted = true;
+    muteButton.textContent = "Unmute";
+  } else if (muted) {
+    muted = false;
+    muteButton.textContent = "Mute";
+  }
+};
+
+/* Date/time popup */
+datetimeButton.onclick = (e) => {
+  e.stopPropagation();
+  const isHidden = datetimePopup.classList.contains("hidden");
+  datetimePopup.classList.add("hidden");
+  volumePopup.classList.add("hidden");
+  if (isHidden) {
+    renderCalendar();
+    datetimePopup.classList.remove("hidden");
+  }
+};
+
+/* Focus controls */
+document.querySelector(".focus-minus").onclick = (e) => {
+  e.stopPropagation();
+  focusMinutes = Math.max(5, focusMinutes - 5);
+  focusDurationEl.textContent = `${focusMinutes} mins`;
+};
+
+document.querySelector(".focus-plus").onclick = (e) => {
+  e.stopPropagation();
+  focusMinutes = Math.min(180, focusMinutes + 5);
+  focusDurationEl.textContent = `${focusMinutes} mins`;
+};
 
 /* Apps */
 const apps = {
-  about: {
-    title: "About Gethin OS",
-    createContent() {
-      const d = document.createElement("div");
-      d.innerHTML = `
-        <h3>Gethin OS</h3>
-        <p>A Windows-style web OS.</p>
-        <p>Made by Gethin.</p>
-      `;
-      return d;
-    },
-  },
-
   notes: {
     title: "Notes",
     createContent() {
@@ -211,6 +308,16 @@ function createWindow(appId, opts = {}) {
   };
 
   focus();
+}
+
+function focus(appId) {
+  const entry = openWindows[appId];
+  if (!entry) return;
+  entry.win.style.zIndex = ++z;
+  document.querySelectorAll(".taskbar-item").forEach((i) =>
+    i.classList.remove("active")
+  );
+  entry.taskItem.classList.add("active");
 }
 
 /* Desktop icons */
