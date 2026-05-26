@@ -75,7 +75,7 @@ body {
   gap: 10px;
 }
 
-/* Start button (smaller, iPad-friendly) */
+/* Start button */
 .taskbar-start {
   height: 40px;
   padding: 0 14px;
@@ -111,9 +111,45 @@ body {
   height: 22px;
 }
 
+/* Taskbar app labels (for open windows) */
+#taskbar-apps {
+  display: flex;
+  gap: 4px;
+  margin-left: 10px;
+}
+
+.taskbar-item {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: none;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.taskbar-item.active {
+  background: rgba(255,255,255,0.2);
+}
+
 /* Tray */
 .tray-icon {
   font-size: 1.1rem;
+}
+
+.tray-icon-muted {
+  position: relative;
+  color: #f87171;
+}
+
+.tray-icon-muted::after {
+  content: "";
+  position: absolute;
+  left: -2px;
+  right: -2px;
+  top: 50%;
+  border-top: 2px solid #f87171;
+  transform: rotate(-20deg);
 }
 
 .tray-btn,
@@ -194,7 +230,7 @@ body {
   background: #1f1f1f;
   display: flex;
   align-items: center;
-  padding: 0 10px;
+  padding: 0 8px;
   cursor: grab;
 }
 
@@ -206,19 +242,24 @@ body {
 
 .window-controls {
   display: flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 .window-btn {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  border-radius: 3px;
   border: none;
   cursor: pointer;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.window-btn.min { background: #facc15; }
-.window-btn.close { background: #ef4444; }
+.window-btn.min { background: #4b5563; color: white; }
+.window-btn.max { background: #4b5563; color: white; }
+.window-btn.close { background: #ef4444; color: white; }
 
 .window-content {
   padding: 10px;
@@ -237,7 +278,7 @@ body {
   font-family: monospace;
 }
 
-/* Terminal (PowerShell-ish) */
+/* Terminal */
 .terminal-root {
   display: flex;
   flex-direction: column;
@@ -248,7 +289,7 @@ body {
 }
 
 .terminal-titlebar {
-  background: #012456;
+  background: #0c0c0c;
   color: #fff;
   font-size: 0.8rem;
   padding: 4px 8px;
@@ -262,13 +303,13 @@ body {
   color: #ffffff;
   overflow-y: auto;
   white-space: pre-wrap;
-  background: #000;
+  background: #0c0c0c;
 }
 
 .terminal-input-row {
   display: flex;
   padding: 8px;
-  background: #000;
+  background: #0c0c0c;
 }
 
 .terminal-prompt {
@@ -286,7 +327,7 @@ body {
   font-family: Consolas, monospace;
 }
 
-/* Popups (volume + datetime) */
+/* Popups */
 .popup {
   position: absolute;
   bottom: 60px;
@@ -309,13 +350,9 @@ body {
   margin-bottom: 6px;
 }
 
-.popup-button {
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: none;
-  background: rgba(255,255,255,0.1);
-  color: white;
-  cursor: pointer;
+.wifi-network {
+  font-size: 0.8rem;
+  padding: 4px 0;
 }
 
 /* Volume popup */
@@ -376,6 +413,10 @@ body {
   cursor: pointer;
 }
 
+.explorer-nav-item.active {
+  background: rgba(255,255,255,0.15);
+}
+
 .explorer-nav-item:hover {
   background: rgba(255,255,255,0.08);
 }
@@ -412,6 +453,9 @@ body {
 
 .explorer-file-name {
   flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .explorer-file-type {
@@ -425,17 +469,24 @@ body {
   font-size: 0.85rem;
 }
 
-.viewer-text {
-  white-space: pre-wrap;
-  font-family: Consolas, monospace;
+.viewer-textarea {
+  width: 100%;
+  height: 200px;
   background: #111;
+  border: 1px solid #333;
   border-radius: 6px;
+  color: white;
   padding: 8px;
+  font-family: Consolas, monospace;
 }
 
 .viewer-image {
   max-width: 100%;
   border-radius: 6px;
+}
+
+.viewer-save {
+  margin-top: 8px;
 }
 
 /* iPad tweaks */
