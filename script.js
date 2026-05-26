@@ -2,6 +2,7 @@ const startButton = document.getElementById("start-button");
 const startMenu = document.getElementById("start-menu");
 const windowLayer = document.getElementById("window-layer");
 const taskbarApps = document.getElementById("taskbar-apps");
+const minimizedArea = document.getElementById("minimized-area");
 
 const volumeButton = document.getElementById("volume-button");
 const volumePopup = document.getElementById("volume-popup");
@@ -155,10 +156,10 @@ datetimeButton.onclick = (e) => {
   }
 };
 
-/* File data */
+/* File data (no audio files listed) */
 const explorerFiles = [
   { name: "notes.txt", type: "text", folder: "Documents", content: "These are your notes.\nYou can edit them in the Notes app or here." },
-  { name: "readme.txt", type: "text", folder: "Documents", content: "Welcome to Gethin OS.\nThis is a fake file explorer." },
+  { name: "readme.txt", type: "text", folder: "Documents", content: "Welcome to Gethin OS." },
   { name: "template1.txt", type: "text", folder: "Documents", content: "Template text file 1." },
   { name: "template2.txt", type: "text", folder: "Downloads", content: "Template text file 2." },
   { name: "wallpaper.jpg", type: "image", folder: "Assets", src: "assets/wallpaper.jpg" },
@@ -166,12 +167,14 @@ const explorerFiles = [
   { name: "terminal.png", type: "image", folder: "Assets", src: "assets/terminal.png" },
   { name: "explorer.png", type: "image", folder: "Assets", src: "assets/explorer.png" },
   { name: "start.png", type: "image", folder: "Assets", src: "assets/start.png" },
+  { name: "soundboard.png", type: "image", folder: "Assets", src: "assets/soundboard.png" },
 ];
 
 /* Apps */
 const apps = {
   explorer: {
     title: "File Explorer",
+    icon: "assets/explorer.png",
     createContent() {
       const root = document.createElement("div");
       root.className = "explorer-root";
@@ -253,7 +256,6 @@ const apps = {
         });
       });
 
-      // default
       sidebar.querySelector('[data-folder="Home"]').classList.add("active");
       renderFolder("Home");
 
@@ -269,17 +271,39 @@ const apps = {
 
   notes: {
     title: "Notes",
+    icon: "assets/notes.png",
     createContent() {
+      const container = document.createElement("div");
+
       const t = document.createElement("textarea");
       t.className = "notes-textarea";
       t.value = localStorage.getItem("notes") || "";
       t.oninput = () => localStorage.setItem("notes", t.value);
-      return t;
+
+      const actions = document.createElement("div");
+      actions.className = "notes-actions";
+
+      const clearBtn = document.createElement("button");
+      clearBtn.className = "notes-clear-btn";
+      clearBtn.textContent = "Clear";
+      clearBtn.onclick = () => {
+        if (confirm("Clear all notes?")) {
+          t.value = "";
+          localStorage.setItem("notes", "");
+        }
+      };
+
+      actions.appendChild(clearBtn);
+      container.appendChild(t);
+      container.appendChild(actions);
+
+      return container;
     },
   },
 
   terminal: {
     title: "Terminal",
+    icon: "assets/terminal.png",
     createContent() {
       const root = document.createElement("div");
       root.className = "terminal-root";
@@ -351,7 +375,65 @@ const apps = {
       return root;
     },
   },
+
+  soundboard: {
+    title: "Soundboard",
+    icon: "assets/soundboard.png",
+    createContent() {
+      const wrapper = document.createElement("div");
+      const grid = document.createElement("div");
+      grid.className = "soundboard-grid";
+
+      const labels = [
+        "Boop",
+        "Click",
+        "Error",
+        "Success",
+        "Ping",
+        "Pop",
+        "Whoosh",
+        "Alert",
+        "Glitch",
+      ];
+
+      labels.forEach(label => {
+        const btn = document.createElement("button");
+        btn.className = "soundboard-btn";
+        btn.textContent = label;
+        // later you can hook: new Audio("assets/audio/whatever.mp3").play()
+        grid.appendChild(btn);
+      });
+
+      wrapper.appendChild(grid);
+      return wrapper;
+    },
+  },
 };
+
+/* Minimized pills */
+function createMinimizedPill(id, title, iconSrc, restoreFn) {
+  const pill = document.createElement("button");
+  pill.className = "minimized-pill";
+
+  if (iconSrc) {
+    const img = document.createElement("img");
+    img.className = "minimized-pill-icon";
+    img.src = iconSrc;
+    pill.appendChild(img);
+  }
+
+  const span = document.createElement("span");
+  span.textContent = title;
+  pill.appendChild(span);
+
+  pill.onclick = () => {
+    restoreFn();
+    pill.remove();
+  };
+
+  minimizedArea.appendChild(pill);
+  return pill;
+}
 
 /* File viewer (editable text + images) */
 function openFileViewer(file) {
@@ -421,6 +503,7 @@ function openFileViewer(file) {
 
   let isMax = false;
   const prevPos = { left: 0, top: 0, width: 0, height: 0 };
+  let pill = null;
 
   function focusWin() {
     win.style.zIndex = ++z;
@@ -442,7 +525,21 @@ function openFileViewer(file) {
   });
   document.addEventListener("mouseup", () => drag = false);
 
-  min.onclick = () => win.classList.add("hidden");
+  min.onclick = () => {
+    win.classList.add("hidden");
+    if (!pill) {
+      pill = createMinimizedPill(
+        "viewer-" + file.name,
+        file.name,
+        file.type === "image" ? file.src : null,
+        () => {
+          win.classList.remove("hidden");
+          focusWin();
+          pill = null;
+        }
+      );
+    }
+  };
 
   max.onclick = () => {
     if (!isMax) {
@@ -464,7 +561,10 @@ function openFileViewer(file) {
     }
   };
 
-  close.onclick = () => win.remove();
+  close.onclick = () => {
+    win.remove();
+    if (pill) pill.remove();
+  };
 }
 
 /* Window system */
@@ -526,7 +626,13 @@ function createWindow(appId, opts = {}) {
   taskItem.textContent = app.title;
   taskbarApps.appendChild(taskItem);
 
-  openWindows[appId] = { win, taskItem, isMax: false, prevPos: {} };
+  openWindows[appId] = {
+    win,
+    taskItem,
+    isMax: false,
+    prevPos: {},
+    pill: null,
+  };
 
   function focusThis() {
     win.style.zIndex = ++z;
@@ -556,7 +662,22 @@ function createWindow(appId, opts = {}) {
 
   document.addEventListener("mouseup", () => (drag = false));
 
-  min.onclick = () => win.classList.add("hidden");
+  min.onclick = () => {
+    win.classList.add("hidden");
+    const entry = openWindows[appId];
+    if (!entry.pill) {
+      entry.pill = createMinimizedPill(
+        appId,
+        app.title,
+        app.icon,
+        () => {
+          win.classList.remove("hidden");
+          focusThis();
+          entry.pill = null;
+        }
+      );
+    }
+  };
 
   max.onclick = () => {
     const entry = openWindows[appId];
@@ -582,8 +703,10 @@ function createWindow(appId, opts = {}) {
   };
 
   close.onclick = () => {
+    const entry = openWindows[appId];
     win.remove();
     taskItem.remove();
+    if (entry.pill) entry.pill.remove();
     delete openWindows[appId];
   };
 
