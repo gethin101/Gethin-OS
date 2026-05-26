@@ -26,7 +26,7 @@
     </div>
 
     <div class="desktop-icon" data-app="soundboard">
-      <img src="assets/soundboard.png" class="desktop-icon-img" />
+      <img src="assets/soundboard.png" class="desktop-icon-img soundboard-icon-big" />
       <span>Soundboard</span>
     </div>
   </div>
@@ -62,7 +62,9 @@
       <button id="wifi-button" class="tray-btn">
         <span class="tray-icon">📶</span>
       </button>
-      <span class="tray-icon">🔋</span>
+      <button id="battery-button" class="tray-btn">
+        <span class="tray-icon">🔋</span>
+      </button>
       <button id="datetime-button" class="tray-clock-btn">
         <div class="tray-clock">
           <div id="tray-time"></div>
@@ -105,6 +107,15 @@
       <div class="wifi-network">Neighbour 1 Wi‑Fi</div>
       <div class="wifi-network">Neighbour 2 Wi‑Fi</div>
       <div class="wifi-network">Guest Wi‑Fi</div>
+    </div>
+  </div>
+
+  <!-- Battery Popup -->
+  <div id="battery-popup" class="popup hidden">
+    <div class="popup-section">
+      <div class="popup-title">Battery</div>
+      <div id="battery-status-main" class="battery-status-main"></div>
+      <div id="battery-status-sub" class="battery-status-sub"></div>
     </div>
   </div>
 
