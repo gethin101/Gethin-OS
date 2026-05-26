@@ -10,11 +10,6 @@
 
   <!-- Desktop -->
   <div id="desktop">
-    <div class="desktop-icon" data-app="about">
-      <img src="assets/about.png" class="desktop-icon-img" />
-      <span>About</span>
-    </div>
-
     <div class="desktop-icon" data-app="notes">
       <img src="assets/notes.png" class="desktop-icon-img" />
       <span>Notes</span>
@@ -29,35 +24,29 @@
   <!-- Taskbar -->
   <div id="taskbar">
     <div id="taskbar-left">
-      <button id="start-button" class="taskbar-icon">
-        <img src="assets/about.png" class="taskbar-icon-img" />
-      </button>
-
-      <button class="taskbar-icon pinned" data-app="about">
-        <img src="assets/about.png" class="taskbar-icon-img" />
-      </button>
-
-      <button class="taskbar-icon pinned" data-app="notes">
-        <img src="assets/notes.png" class="taskbar-icon-img" />
-      </button>
-
-      <button class="taskbar-icon pinned" data-app="terminal">
-        <img src="assets/terminal.png" class="taskbar-icon-img" />
+      <button id="start-button" class="taskbar-start">
+        <img src="assets/start.png" class="taskbar-start-img" />
       </button>
     </div>
 
     <div id="taskbar-center">
-      <div id="taskbar-apps"></div>
+      <button class="taskbar-icon pinned" data-app="notes">
+        <img src="assets/notes.png" class="taskbar-icon-img" />
+      </button>
     </div>
 
     <div id="taskbar-right">
-      <span class="tray-icon">🔊</span>
+      <button id="volume-button" class="tray-btn">
+        <span class="tray-icon">🔊</span>
+      </button>
       <span class="tray-icon">📶</span>
       <span class="tray-icon">🔋</span>
-      <div class="tray-clock">
-        <div id="tray-time"></div>
-        <div id="tray-date"></div>
-      </div>
+      <button id="datetime-button" class="tray-clock-btn">
+        <div class="tray-clock">
+          <div id="tray-time"></div>
+          <div id="tray-date"></div>
+        </div>
+      </button>
     </div>
   </div>
 
@@ -65,9 +54,36 @@
   <div id="start-menu" class="hidden">
     <div class="start-header">Gethin OS</div>
     <div class="start-grid">
-      <button class="start-app" data-app="about">About</button>
       <button class="start-app" data-app="notes">Notes</button>
       <button class="start-app" data-app="terminal">Terminal</button>
+    </div>
+  </div>
+
+  <!-- Volume Popup -->
+  <div id="volume-popup" class="popup hidden">
+    <div class="popup-section">
+      <div class="popup-title">Volume</div>
+      <div class="volume-row">
+        <input id="volume-slider" type="range" min="0" max="100" value="70" />
+        <button id="mute-button" class="popup-button">Mute</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Date/Time Popup -->
+  <div id="datetime-popup" class="popup hidden">
+    <div class="popup-section">
+      <div class="popup-title" id="popup-date-title"></div>
+      <div class="calendar-grid" id="calendar-grid"></div>
+    </div>
+    <div class="popup-section focus-section">
+      <div class="popup-title">Focus</div>
+      <div class="focus-row">
+        <button class="focus-minus">-</button>
+        <span id="focus-duration">30 mins</span>
+        <button class="focus-plus">+</button>
+      </div>
+      <button class="popup-button focus-button">Focus</button>
     </div>
   </div>
 
